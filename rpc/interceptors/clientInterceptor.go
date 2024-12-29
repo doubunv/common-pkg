@@ -20,7 +20,7 @@ type msgPrint struct {
 	Err     string      `json:"err"`
 }
 
-func ClientErrorInterceptor(rpcName string) grpc.UnaryClientInterceptor {
+func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		md, ok := metadata.FromOutgoingContext(ctx)
 		if !ok {
@@ -36,11 +36,11 @@ func ClientErrorInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
-			logc.Info(ctx, msg)
+			logc.Infof(ctx, "%+v", msg)
 			return nil
 		}
 		msg.Err = err.Error()
-		logc.Error(ctx, msg)
+		logc.Errorf(ctx, "%+v", msg)
 		gErr, ok := status.FromError(err)
 		if !ok {
 			return xcode.New(http.StatusInternalServerError, err.Error())

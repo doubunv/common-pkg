@@ -21,7 +21,7 @@ func MustNewClient(conf Config) zrpc.Client {
 		zrpc.RpcClientConf{
 			Target: GenRpcTarget(conf.Host),
 		},
-		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.RpcName)),
+		zrpc.WithUnaryClientInterceptor(interceptors.ClientInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
 	)
 }
@@ -31,7 +31,7 @@ func NewClient(conf Config) (zrpc.Client, error) {
 		zrpc.RpcClientConf{
 			Target: GenRpcTarget(conf.Host),
 		},
-		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.RpcName)),
+		zrpc.WithUnaryClientInterceptor(interceptors.ClientInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
 	)
 }
