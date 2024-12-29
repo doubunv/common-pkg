@@ -2,7 +2,6 @@ package appMiddleware
 
 import (
 	"context"
-	"fmt"
 	"github.com/doubunv/common-pkg/result/xcode"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/metadata"
@@ -52,13 +51,7 @@ func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 			ctx = m.contextMetadataInLog(ctx)
 		}
 
-		logc.Info(ctx, info.FullMethod+",RpcRequest:", req)
 		resp, err = handler(ctx, req)
-		if err != nil {
-			logc.Error(ctx, fmt.Sprintf(info.FullMethod+",rpc错误信息：%v", err))
-		} else {
-			logc.Info(ctx, info.FullMethod+",RpcResponse:", resp)
-		}
 		return resp, err
 	}
 }
