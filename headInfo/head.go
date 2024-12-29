@@ -55,7 +55,7 @@ func (h *Head) String() string {
 
 func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 	ctxNew := logx.ContextWithFields(ctx,
-		logx.Field(consts.Token, h.AuthorizationJwt),
+		logx.Field(consts.HeaderToken, h.AuthorizationJwt),
 		logx.Field(consts.Version, h.Version),
 		logx.Field(consts.Source, h.Source),
 		logx.Field(consts.ClientIp, h.ClientIp),
@@ -93,7 +93,7 @@ func GetFullHead(r *http.Request) map[string][]string {
 
 func HeadInMetadata(ctx context.Context, h Head) context.Context {
 	md := metadata.Pairs(
-		consts.Token, h.AuthorizationJwt,
+		consts.HeaderToken, h.AuthorizationJwt,
 		consts.TokenUid, h.TokenUid,
 		consts.ClientIp, h.ClientIp,
 		consts.ReqPath, h.ReqPath,

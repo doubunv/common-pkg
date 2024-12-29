@@ -43,7 +43,7 @@ func GetJwtToken(ctx context.Context) string {
 	if !ok {
 		return ""
 	}
-	res := strings.Join(md.Get(consts.Token), "")
+	res := strings.Join(md.Get(consts.HeaderToken), "")
 	return res
 }
 

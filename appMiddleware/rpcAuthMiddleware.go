@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/doubunv/common-pkg/result/xcode"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 	"runtime/debug"
 
@@ -19,6 +21,21 @@ func NewRpcAuthMiddleware() *RpcAuthMiddleware {
 	return &RpcAuthMiddleware{}
 }
 
+func (m *RpcAuthMiddleware) contextMetadataInLog(ctx context.Context) context.Context {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ctx
+	}
+
+	var fieldList = make([]logx.LogField, 0)
+	for k, v := range md {
+		fieldList = append(fieldList, logx.Field(k, v))
+	}
+	ctxNew := logx.ContextWithFields(ctx, fieldList...)
+
+	return ctxNew
+}
+
 func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 		defer func() {
@@ -29,15 +46,13 @@ func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 			}
 		}()
 
+		mdData, ok := metadata.FromIncomingContext(ctx)
+		if ok {
+			ctx = metadata.NewOutgoingContext(ctx, mdData)
+			ctx = m.contextMetadataInLog(ctx)
+		}
+
 		logc.Info(ctx, info.FullMethod+",RpcRequest:", req)
-
-		//mdData, ok := metadata.FromIncomingContext(ctx)
-		//if !ok {
-		//	return nil, errors.New("no rpc auth metadata. ")
-		//}
-		//ctx = metadata.NewOutgoingContext(ctx, mdData)
-		//ctx = rpc.ContextMetadataInLog(ctx)
-
 		resp, err = handler(ctx, req)
 		if err != nil {
 			logc.Error(ctx, fmt.Sprintf(info.FullMethod+",rpc错误信息：%v", err))
