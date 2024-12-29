@@ -2,6 +2,8 @@ package appMiddleware
 
 import (
 	"context"
+	"errors"
+	"github.com/doubunv/common-pkg/headInfo"
 	"github.com/doubunv/common-pkg/result/xcode"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/metadata"
@@ -49,6 +51,11 @@ func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 		if ok {
 			ctx = metadata.NewOutgoingContext(ctx, mdData)
 			ctx = m.contextMetadataInLog(ctx)
+			if headInfo.GetBusinessCode(ctx) == "" ||
+				headInfo.GetBusiness(ctx) == "" ||
+				headInfo.GetSource(ctx) == "" {
+				return nil, errors.New("Rpc header data err")
+			}
 		}
 
 		resp, err = handler(ctx, req)
