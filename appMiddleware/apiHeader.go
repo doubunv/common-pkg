@@ -3,9 +3,9 @@ package appMiddleware
 import (
 	"bytes"
 	"errors"
+	"github.com/doubunv/common-pkg/headInfo"
+	"github.com/doubunv/common-pkg/result"
 	"github.com/zeromicro/go-zero/core/logc"
-	"gitlab.888bbm.com/go-package/common-pkg/headInfo"
-	"gitlab.888bbm.com/go-package/common-pkg/result"
 	"io"
 	"net/http"
 	"runtime/debug"

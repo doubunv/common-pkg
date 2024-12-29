@@ -3,7 +3,7 @@ package appMiddleware
 import (
 	"context"
 	"fmt"
-	"gitlab.888bbm.com/go-package/common-pkg/result/xcode"
+	"github.com/doubunv/common-pkg/result/xcode"
 	"net/http"
 	"runtime/debug"
 

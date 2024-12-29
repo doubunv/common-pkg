@@ -1,8 +1,8 @@
 package app
 
 import (
+	"github.com/doubunv/common-pkg/appMiddleware"
 	"github.com/zeromicro/go-zero/rest"
-	"gitlab.888bbm.com/go-package/common-pkg/appMiddleware"
 )
 
 type SMOption func(s *ServerMiddleware)

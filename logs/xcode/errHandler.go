@@ -2,7 +2,7 @@ package xcode
 
 import (
 	"errors"
-	"gitlab.888bbm.com/go-package/common-pkg/result/xcode"
+	"github.com/doubunv/common-pkg/result/xcode"
 	"net/http"
 
 	"google.golang.org/grpc/codes"

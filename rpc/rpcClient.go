@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"fmt"
-	"gitlab.888bbm.com/go-package/common-pkg/rpc/interceptors"
+	"github.com/doubunv/common-pkg/rpc/interceptors"
 
 	"github.com/zeromicro/go-zero/zrpc"
 )

@@ -1,10 +1,10 @@
 package app
 
 import (
+	"github.com/doubunv/common-pkg/dbM"
+	"github.com/doubunv/common-pkg/logs"
 	"github.com/sirupsen/logrus"
 	"github.com/zeromicro/go-zero/core/logx"
-	"gitlab.888bbm.com/go-package/common-pkg/dbM"
-	"gitlab.888bbm.com/go-package/common-pkg/logs"
 )
 
 func init() {

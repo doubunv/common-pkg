@@ -1,4 +1,4 @@
-module gitlab.888bbm.com/go-package/common-pkg
+module github.com/doubunv/common-pkg
 
 go 1.22.0
 

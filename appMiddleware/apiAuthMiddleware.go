@@ -1,7 +1,7 @@
 package appMiddleware
 
 import (
-	"gitlab.888bbm.com/go-package/common-pkg/result"
+	"github.com/doubunv/common-pkg/result"
 	"net/http"
 )
 

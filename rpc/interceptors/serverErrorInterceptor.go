@@ -2,7 +2,7 @@ package interceptors
 
 import (
 	"context"
-	"gitlab.888bbm.com/go-package/common-pkg/logs/xcode"
+	"github.com/doubunv/common-pkg/logs/xcode"
 
 	"google.golang.org/grpc"
 )

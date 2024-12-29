@@ -2,7 +2,7 @@ package interceptors
 
 import (
 	"context"
-	"gitlab.888bbm.com/go-package/common-pkg/result/xcode"
+	"github.com/doubunv/common-pkg/result/xcode"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/core/trace"

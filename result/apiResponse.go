@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gitlab.888bbm.com/go-package/common-pkg/result/xcode"
+	"github.com/doubunv/common-pkg/result/xcode"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/core/logc"

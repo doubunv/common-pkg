@@ -3,8 +3,8 @@ package v1
 import (
 	"context"
 	"encoding/json"
+	"github.com/doubunv/common-pkg/headInfo"
 	"github.com/segmentio/kafka-go"
-	"gitlab.888bbm.com/go-package/common-pkg/headInfo"
 	"google.golang.org/grpc/metadata"
 )
 

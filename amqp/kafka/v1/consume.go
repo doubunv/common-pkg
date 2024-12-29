@@ -3,9 +3,9 @@ package v1
 import (
 	"context"
 	"encoding/json"
+	"github.com/doubunv/common-pkg/amqp/kafka/config"
 	"github.com/segmentio/kafka-go"
 	"github.com/zeromicro/go-zero/core/logc"
-	"gitlab.888bbm.com/go-package/common-pkg/amqp/kafka/config"
 	"runtime/debug"
 )
 

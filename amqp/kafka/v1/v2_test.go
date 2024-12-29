@@ -2,8 +2,8 @@ package v1
 
 import (
 	"context"
-	"gitlab.888bbm.com/go-package/common-pkg/amqp/kafka/config"
-	"gitlab.888bbm.com/go-package/common-pkg/headInfo"
+	"github.com/doubunv/common-pkg/amqp/kafka/config"
+	"github.com/doubunv/common-pkg/headInfo"
 	"testing"
 )
 

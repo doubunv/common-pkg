@@ -3,7 +3,7 @@ package headInfo
 import (
 	"context"
 	"encoding/json"
-	"gitlab.888bbm.com/go-package/common-pkg/consts"
+	"github.com/doubunv/common-pkg/consts"
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc/metadata"
 	"net"
