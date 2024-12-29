@@ -15,22 +15,20 @@ import (
 
 func ClientErrorInterceptor(appName, business string) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-		//ctx = metadata.AppendToOutgoingContext(ctx, "app_name", appName, "business", business)
 		md, ok := metadata.FromOutgoingContext(ctx)
 		if !ok {
 			md = metadata.MD{}
 		}
 		md.Set("app_name", appName)
-		//md.Set("business", business)
 		trace.Inject(ctx, otel.GetTextMapPropagator(), &md)
 		ctx = metadata.NewOutgoingContext(ctx, md)
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
-			logc.Info(ctx, method, req, reply, cc, opts)
+			logc.Info(ctx, appName, method, req, reply)
 			return nil
 		}
-		logc.Error(ctx, method, req, reply, cc, opts)
+		logc.Error(ctx, appName, method, req, reply, err.Error())
 
 		gErr, ok := status.FromError(err)
 		if !ok {
