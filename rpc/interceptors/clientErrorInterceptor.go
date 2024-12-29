@@ -13,6 +13,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+type msgPrint struct {
+	RpcName string      `json:"rpc_name"`
+	Req     interface{} `json:"req"`
+	Reply   interface{} `json:"reply"`
+	Err     string      `json:"err"`
+}
+
 func ClientErrorInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		md, ok := metadata.FromOutgoingContext(ctx)
@@ -22,14 +29,18 @@ func ClientErrorInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 		md.Set("rpc_name", rpcName)
 		trace.Inject(ctx, otel.GetTextMapPropagator(), &md)
 		ctx = metadata.NewOutgoingContext(ctx, md)
-
+		msg := msgPrint{
+			RpcName: rpcName,
+			Req:     req,
+			Reply:   reply,
+		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
-			logc.Info(ctx, rpcName, method, req, reply)
+			logc.Info(ctx, msg)
 			return nil
 		}
-		logc.Error(ctx, rpcName, method, req, reply, err.Error())
-
+		msg.Err = err.Error()
+		logc.Error(ctx, msg)
 		gErr, ok := status.FromError(err)
 		if !ok {
 			return xcode.New(http.StatusInternalServerError, err.Error())
