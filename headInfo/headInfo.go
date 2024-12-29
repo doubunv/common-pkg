@@ -115,3 +115,12 @@ func SetBusinessCode(ctx context.Context, value string) context.Context {
 	ctx = metadata.NewOutgoingContext(ctx, md)
 	return ctx
 }
+
+func GetBusiness(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.Business), "")
+	return res
+}
