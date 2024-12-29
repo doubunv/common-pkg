@@ -12,9 +12,8 @@ func GenRpcTarget(hosts string) string {
 }
 
 type Config struct {
-	Host     string
-	AppName  string
-	Business string
+	Host    string
+	RpcName string
 }
 
 func MustNewClient(conf Config) zrpc.Client {
@@ -22,7 +21,7 @@ func MustNewClient(conf Config) zrpc.Client {
 		zrpc.RpcClientConf{
 			Target: GenRpcTarget(conf.Host),
 		},
-		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.AppName, conf.Business)),
+		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
 	)
 }
@@ -32,7 +31,7 @@ func NewClient(conf Config) (zrpc.Client, error) {
 		zrpc.RpcClientConf{
 			Target: GenRpcTarget(conf.Host),
 		},
-		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.AppName, conf.Business)),
+		zrpc.WithUnaryClientInterceptor(interceptors.ClientErrorInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
 	)
 }

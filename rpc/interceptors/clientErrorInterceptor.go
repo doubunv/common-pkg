@@ -13,22 +13,22 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func ClientErrorInterceptor(appName, business string) grpc.UnaryClientInterceptor {
+func ClientErrorInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		md, ok := metadata.FromOutgoingContext(ctx)
 		if !ok {
 			md = metadata.MD{}
 		}
-		md.Set("app_name", appName)
+		md.Set("rpc_name", rpcName)
 		trace.Inject(ctx, otel.GetTextMapPropagator(), &md)
 		ctx = metadata.NewOutgoingContext(ctx, md)
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
-			logc.Info(ctx, appName, method, req, reply)
+			logc.Info(ctx, rpcName, method, req, reply)
 			return nil
 		}
-		logc.Error(ctx, appName, method, req, reply, err.Error())
+		logc.Error(ctx, rpcName, method, req, reply, err.Error())
 
 		gErr, ok := status.FromError(err)
 		if !ok {
