@@ -3,6 +3,7 @@ package interceptors
 import (
 	"context"
 	"github.com/doubunv/common-pkg/result/xcode"
+	"github.com/zeromicro/go-zero/core/logc"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/core/trace"
@@ -26,8 +27,10 @@ func ClientErrorInterceptor(appName, business string) grpc.UnaryClientIntercepto
 
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
+			logc.Info(ctx, method, req, reply, cc, opts)
 			return nil
 		}
+		logc.Error(ctx, method, req, reply, cc, opts)
 
 		gErr, ok := status.FromError(err)
 		if !ok {
