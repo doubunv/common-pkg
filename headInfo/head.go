@@ -24,21 +24,23 @@ type Head struct {
 	Business         string `json:"business"`
 	BusinessCode     string `json:"business_code"`
 	ContentLanguage  string `json:"content_language"`
+	TokenUidRole     string `json:"token_uid_role"`
 }
 
 func GetHead(r *http.Request) *Head {
 	header := r.Header
 	return &Head{
 		AuthorizationJwt: strings.Trim(header.Get(consts.HeaderToken), " "),
-		Version:          strings.Trim(header.Get("Version"), " "),
-		Source:           strings.Trim(header.Get("Source"), " "),
+		Version:          strings.Trim(header.Get(consts.Version), " "),
+		Source:           strings.Trim(header.Get(consts.Source), " "),
 		ClientIp:         getClientIP(r),
-		TokenUid:         strings.Trim(header.Get("TokenUid"), " "),
 		Trace:            trace.SpanContextFromContext(r.Context()).TraceID().String(),
 		ReqPath:          r.URL.Path,
 		Business:         strings.Trim(header.Get(consts.Business), " "),
 		BusinessCode:     strings.Trim(header.Get(consts.BusinessCode), " "),
 		ContentLanguage:  strings.Trim(header.Get(consts.ContentLanguage), " "),
+		TokenUid:         "",
+		TokenUidRole:     "",
 	}
 }
 
@@ -62,7 +64,8 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 		logx.Field(consts.ReqPath, h.ReqPath),
 		logx.Field(consts.Business, h.Business),
 		logx.Field(consts.BusinessCode, h.BusinessCode),
-		logx.Field(consts.ContentLanguage, h.BusinessCode),
+		logx.Field(consts.ContentLanguage, h.ContentLanguage),
+		logx.Field(consts.TokenUidRole, h.TokenUidRole),
 	)
 	return ctxNew
 }
@@ -99,6 +102,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.Business, h.Business,
 		consts.BusinessCode, h.BusinessCode,
 		consts.ContentLanguage, h.ContentLanguage,
+		consts.TokenUidRole, h.TokenUidRole,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)

@@ -1,13 +1,7 @@
 package consts
 
-type IntBool int
-type LogType int
-
 const (
-	HeaderToken = "AuthorizationJwt"
-)
-
-const (
+	HeaderToken     = "authorization_jwt"
 	Trace           = "trace"
 	ClientIp        = "client_ip"
 	UserAgent       = "user_agent"
