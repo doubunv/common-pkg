@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-type CheckRequestTokenFunc func(r *http.Request, token string) (userId int64, roleId int64)
+type CheckRequestTokenFunc func(r *http.Request, token string) int64
 
 func verifyPath(urlPath string, noVerifyPath map[string]int) bool {
 	if _, ok := noVerifyPath[urlPath]; ok {
@@ -40,13 +40,11 @@ func MustAuthTokenRequest(r *http.Request, checkToken CheckRequestTokenFunc, noV
 
 	if token != "" {
 		var tokenUid int64 = 0
-		var roleId int64 = 0
 		if checkToken != nil {
-			tokenUid, roleId = checkToken(r, token)
+			tokenUid = checkToken(r, token)
 		}
 		if tokenUid > 0 {
 			md := ctxMd.SetMdCtxFromOut(ctx, consts.TokenUid, strconv.FormatInt(tokenUid, 10))
-			md = ctxMd.SetMdCtxFromOut(ctx, consts.TokenUidRole, strconv.FormatInt(roleId, 10))
 			ctx = metadata.NewOutgoingContext(ctx, md)
 		} else {
 			if !wPathBool {
