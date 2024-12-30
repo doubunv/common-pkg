@@ -51,10 +51,8 @@ func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 		if ok {
 			ctx = metadata.NewOutgoingContext(ctx, mdData)
 			ctx = m.contextMetadataInLog(ctx)
-			if headInfo.GetBusinessCode(ctx) == "" ||
-				headInfo.GetBusiness(ctx) == "" ||
-				headInfo.GetSource(ctx) == "" {
-				return nil, errors.New("Rpc header data err")
+			if headInfo.GetBusinessCode(ctx) == "" {
+				return nil, errors.New("Rpc metadata err")
 			}
 		}
 
