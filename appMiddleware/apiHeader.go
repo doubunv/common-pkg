@@ -67,10 +67,10 @@ func (m *ApiHeaderMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 
-		if h.Business == "" || h.Source == "" {
-			result.HttpErrorResult(r.Context(), w, errors.New("Head data error"))
-			return
-		}
+		//if h.Business == "" || h.Source == "" {
+		//	result.HttpErrorResult(r.Context(), w, errors.New("Head data error"))
+		//	return
+		//}
 
 		newCtx := headInfo.ContextHeadInLog(r.Context(), h)
 		newCtx = headInfo.HeadInMetadata(newCtx, *h)
