@@ -25,7 +25,7 @@ type Head struct {
 	BusinessCode     string `json:"business_code"`
 	ContentLanguage  string `json:"content_language"`
 	TokenUidRole     string `json:"token_uid_role"`
-	ReqHostUrl       string `json:"req_host_url"` // 请求地址
+	ReqOrigin        string `json:"req_origin"` // 请求地址
 }
 
 func GetHead(r *http.Request) *Head {
@@ -42,7 +42,7 @@ func GetHead(r *http.Request) *Head {
 		ContentLanguage:  strings.Trim(header.Get(consts.ContentLanguage), " "),
 		TokenUid:         "",
 		TokenUidRole:     "",
-		ReqHostUrl:       r.Host,
+		ReqOrigin:        strings.Trim(header.Get("Origin"), " "),
 	}
 }
 
@@ -68,7 +68,7 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 		logx.Field(consts.BusinessCode, h.BusinessCode),
 		logx.Field(consts.ContentLanguage, h.ContentLanguage),
 		logx.Field(consts.TokenUidRole, h.TokenUidRole),
-		logx.Field(consts.HostUrl, h.ReqHostUrl),
+		logx.Field(consts.HostUrl, h.ReqOrigin),
 	)
 	return ctxNew
 }
@@ -106,7 +106,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.BusinessCode, h.BusinessCode,
 		consts.ContentLanguage, h.ContentLanguage,
 		consts.TokenUidRole, h.TokenUidRole,
-		consts.HostUrl, h.ReqHostUrl,
+		consts.HostUrl, h.ReqOrigin,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)
