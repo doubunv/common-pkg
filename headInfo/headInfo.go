@@ -124,3 +124,16 @@ func GetBusiness(ctx context.Context) string {
 	res := strings.Join(md.Get(consts.Business), "")
 	return res
 }
+
+func GetOriginHostUrl(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.HostUrl), "")
+
+	res = strings.ReplaceAll(res, "http://", "")
+	res = strings.ReplaceAll(res, "https://", "")
+
+	return res
+}

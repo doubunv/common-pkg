@@ -10,8 +10,8 @@ import (
 func Test_Comsume(t *testing.T) {
 	cf := config.CustomerConfig{
 		ProviderConfig: config.ProviderConfig{
-			Brokers: []string{"52.77.42.5:19092"},
-			Topic:   "xq_topic",
+			Brokers: []string{"54.179.172.191:9092"},
+			Topic:   "wallet_balance_log_topic",
 		},
 		GroupID: "lala",
 	}
@@ -29,8 +29,8 @@ func Test_Comsume(t *testing.T) {
 
 func Test_Provider(t *testing.T) {
 	cf := config.ProviderConfig{
-		Brokers: []string{"52.77.42.5:19092"},
-		Topic:   "xq_topic",
+		Brokers: []string{"54.179.172.191:9092"},
+		Topic:   "wallet_balance_log_topic",
 	}
 
 	ctx := headInfo.SetBusinessCode(context.Background(), "21111111")
