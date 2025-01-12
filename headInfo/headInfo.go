@@ -130,7 +130,7 @@ func GetOriginHostUrl(ctx context.Context) string {
 	if !ok {
 		return ""
 	}
-	res := strings.Join(md.Get(consts.HostUrl), "")
+	res := strings.Join(md.Get(consts.OriginUrl), "")
 
 	res = strings.ReplaceAll(res, "http://", "")
 	res = strings.ReplaceAll(res, "https://", "")

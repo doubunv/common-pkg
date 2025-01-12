@@ -68,7 +68,7 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 		logx.Field(consts.BusinessCode, h.BusinessCode),
 		logx.Field(consts.ContentLanguage, h.ContentLanguage),
 		logx.Field(consts.TokenUidRole, h.TokenUidRole),
-		logx.Field(consts.HostUrl, h.ReqOrigin),
+		logx.Field(consts.OriginUrl, h.ReqOrigin),
 	)
 	return ctxNew
 }
@@ -106,7 +106,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.BusinessCode, h.BusinessCode,
 		consts.ContentLanguage, h.ContentLanguage,
 		consts.TokenUidRole, h.TokenUidRole,
-		consts.HostUrl, h.ReqOrigin,
+		consts.OriginUrl, h.ReqOrigin,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)

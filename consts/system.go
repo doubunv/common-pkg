@@ -13,5 +13,5 @@ const (
 	Business        = "business"
 	BusinessCode    = "business_code"
 	ContentLanguage = "content_language"
-	HostUrl         = "host_url"
+	OriginUrl       = "origin_url"
 )
