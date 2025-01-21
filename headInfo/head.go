@@ -74,7 +74,7 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 }
 
 func getClientIP(r *http.Request) string {
-	ip := r.Header.Get("x_forwarded_for")
+	ip := r.Header.Get("X-Forwarded-For")
 	if ip == "" {
 		ip = r.Header.Get("X-Real-Ip")
 	}
