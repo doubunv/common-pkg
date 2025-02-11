@@ -94,9 +94,7 @@ func recursiveGetAllValues(data interface{}, newData map[string]interface{}) int
 			if checkType(v.MapIndex(key).Interface()) {
 				var bl = false
 				if strings.ToLower(key.String()) == "code" ||
-					strings.ToLower(key.String()) == "id" ||
-					strings.ToLower(key.String()) == "category_code" ||
-					strings.ToLower(key.String()) == "subtype_code" {
+					strings.ToLower(key.String()) == "id" {
 					bl = true
 				}
 
@@ -131,9 +129,7 @@ func recursiveGetAllValues(data interface{}, newData map[string]interface{}) int
 			if checkType(v.Field(i).Interface()) {
 				var bl = false
 				if strings.ToLower(fieldTag) == "code" ||
-					strings.ToLower(fieldTag) == "category_code" ||
-					strings.ToLower(fieldTag) == "id" ||
-					strings.ToLower(fieldTag) == "subtype_code" {
+					strings.ToLower(fieldTag) == "id" {
 					bl = true
 				}
 				if newValue, ok := newData[value.(string)]; ok && !bl {
