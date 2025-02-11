@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"gitlab.coolgame.world/go-template/base-common/arLanguage"
+	"github.com/doubunv/common-pkg/language"
 	"testing"
 )
 
@@ -20,6 +20,6 @@ func TestIsExist(t *testing.T) {
 	}
 
 	fmt.Println("Before modification:", data)
-	res := arLanguage.SwitchLanguage(data, "india")
+	res := language.SwitchLanguage(data, "india")
 	fmt.Println("After modification:", res)
 }
