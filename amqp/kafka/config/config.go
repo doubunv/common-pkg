@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/segmentio/kafka-go"
 	"time"
 )
 
@@ -21,7 +20,6 @@ type CustomerConfig struct {
 }
 
 type ProviderConfig struct {
-	Brokers      []string
-	Topic        string
-	RequiredAcks kafka.RequiredAcks `json:"RequiredAcks,omitempty,default=1"`
+	Brokers []string
+	Topic   string
 }

@@ -7,6 +7,8 @@ import (
 	"github.com/segmentio/kafka-go"
 	"github.com/zeromicro/go-zero/core/logc"
 	"runtime/debug"
+	"strings"
+	"time"
 )
 
 type MessageHandle func(ctx context.Context, msg string) error // 消息处理回调handle
@@ -15,23 +17,25 @@ type MessageHandle func(ctx context.Context, msg string) error // 消息处理�
 type Consumer struct {
 	reader      *kafka.Reader
 	isUserClose bool // 是否是用户主动关闭
+	kafkaConf   kafka.ReaderConfig
 }
 
 // NewConsumer   生成一个新的消费者
 func NewConsumer(conf config.CustomerConfig) *Consumer {
 	kafkaConf := kafka.ReaderConfig{
-		Brokers:        conf.Brokers,
-		GroupID:        conf.GroupID,
-		Topic:          conf.Topic,
-		MinBytes:       10e3, // 10KB
-		MaxBytes:       10e6, // 10MB
-		CommitInterval: 0,    // 禁用自动提交
-		StartOffset:    kafka.FirstOffset,
+		Brokers: conf.Brokers,
+		GroupID: conf.GroupID,
+		Topic:   conf.Topic,
+		//MinBytes:       10e3, // 10KB
+		//MaxBytes:       10e6, // 10MB
+		//CommitInterval: 0,    // 禁用自动提交
+		//StartOffset:    kafka.FirstOffset,
 	}
 	reader := kafka.NewReader(kafkaConf)
 	return &Consumer{
 		reader:      reader,
 		isUserClose: false,
+		kafkaConf:   kafkaConf,
 	}
 }
 
@@ -46,6 +50,19 @@ func (c *Consumer) Close() error {
 	return c.reader.Close()
 }
 
+func (c *Consumer) sendDeadLetterQueue(ctx context.Context, topic string, msg *KafkaMessage) {
+	headT := "mq_dead_letter:"
+	if strings.HasPrefix(topic, headT) {
+		return
+	}
+
+	cf := config.ProviderConfig{
+		Brokers: c.kafkaConf.Brokers,
+		Topic:   headT + topic,
+	}
+	NewProducer(cf).ProduceMessageWithContext(ctx, msg)
+}
+
 func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 	go func() {
 		defer func() {
@@ -54,37 +71,35 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 			}
 		}()
 		for {
-			msg, err := c.reader.ReadMessage(context.Background())
 			newCtx := context.Background()
+			msg, err := c.reader.ReadMessage(newCtx)
 			logc.Infof(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg: %s", msg.Topic, string(msg.Value))
 
 			ka := &KafkaMessage{}
 			err = json.Unmarshal(msg.Value, ka)
 			if err != nil {
 				logc.Errorf(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, err: %+v", msg.Topic, err)
-				c.AckMessage(msg)
 				continue
 			}
 			newCtx = ka.SetContext(newCtx)
-			//go func(msg kafka.Message) {
-			//	defer func() {
-			//		if err := recover(); err != nil {
-			//			logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
-			//			c.AckMessage(msg)
-			//		}
-			//	}()
-			//	err = handler(newCtx, ka.GetMsg())
-			//	if err == nil {
-			//		c.AckMessage(msg)
-			//	}
-			//}(msg)
-			err = handler(newCtx, ka.GetMsg())
-			if err == nil {
-				c.AckMessage(msg)
-			} else {
-				logc.Errorf(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, err: %+v", msg.Topic, err)
-			}
-			continue
+			go func(msg kafka.Message) {
+				defer func() {
+					if err := recover(); err != nil {
+						logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
+					}
+				}()
+				for i := 0; i < 3; i++ { // 最大重试次数
+					err = handler(newCtx, ka.GetMsg())
+					if err == nil {
+						break
+					}
+					if i == 2 {
+						c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
+						break
+					}
+					time.Sleep(500 * time.Millisecond) // 等待一段时间
+				}
+			}(msg)
 		}
 	}()
 	select {}

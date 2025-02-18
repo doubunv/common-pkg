@@ -2,16 +2,18 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"github.com/doubunv/common-pkg/amqp/kafka/config"
 	"github.com/doubunv/common-pkg/headInfo"
+	"math/rand"
 	"testing"
 )
 
 func Test_Comsume(t *testing.T) {
 	cf := config.CustomerConfig{
 		ProviderConfig: config.ProviderConfig{
-			Brokers: []string{"54.179.172.191:9092"},
-			Topic:   "wallet_balance_log_topic",
+			Brokers: []string{"xx.xx.xx.xx:9092"},
+			Topic:   "xxxx",
 		},
 		GroupID: "lala",
 	}
@@ -23,14 +25,20 @@ func Test_Comsume(t *testing.T) {
 		//fmt.Println(headInfo.GetTrance(ctx))
 		//fmt.Println(msg)
 
-		return nil
+		randomNum := rand.Intn(5) + 1
+		if randomNum == 1 {
+			return nil
+		}
+
+		return fmt.Errorf("处理失败")
+		//return errors.New("aaaa")
 	})
 }
 
 func Test_Provider(t *testing.T) {
 	cf := config.ProviderConfig{
-		Brokers: []string{"54.179.172.191:9092"},
-		Topic:   "wallet_balance_log_topic",
+		Brokers: []string{"xx.xx.xx.xx:9092"},
+		Topic:   "xxxx",
 	}
 
 	ctx := headInfo.SetBusinessCode(context.Background(), "21111111")

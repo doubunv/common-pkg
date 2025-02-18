@@ -22,7 +22,7 @@ func NewProducer(config config.ProviderConfig) *Producer {
 		MaxAttempts:            5,               // 最大重试次数
 		WriteTimeout:           3 * time.Second, // 写入超时时间
 		AllowAutoTopicCreation: true,
-		RequiredAcks:           config.RequiredAcks,
+		RequiredAcks:           kafka.RequireOne,
 	}
 	return &Producer{
 		Writer: writer,
