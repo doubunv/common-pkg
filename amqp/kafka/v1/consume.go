@@ -81,6 +81,8 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 			err = handler(newCtx, ka.GetMsg())
 			if err == nil {
 				c.AckMessage(msg)
+			} else {
+				logc.Errorf(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, err: %+v", msg.Topic, err)
 			}
 			continue
 		}
