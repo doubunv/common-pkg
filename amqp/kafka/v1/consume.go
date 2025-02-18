@@ -66,18 +66,22 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 				continue
 			}
 			newCtx = ka.SetContext(newCtx)
-			go func(msg kafka.Message) {
-				defer func() {
-					if err := recover(); err != nil {
-						logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
-						c.AckMessage(msg)
-					}
-				}()
-				err = handler(newCtx, ka.GetMsg())
-				if err == nil {
-					c.AckMessage(msg)
-				}
-			}(msg)
+			//go func(msg kafka.Message) {
+			//	defer func() {
+			//		if err := recover(); err != nil {
+			//			logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
+			//			c.AckMessage(msg)
+			//		}
+			//	}()
+			//	err = handler(newCtx, ka.GetMsg())
+			//	if err == nil {
+			//		c.AckMessage(msg)
+			//	}
+			//}(msg)
+			err = handler(newCtx, ka.GetMsg())
+			if err == nil {
+				c.AckMessage(msg)
+			}
 			continue
 		}
 	}()
