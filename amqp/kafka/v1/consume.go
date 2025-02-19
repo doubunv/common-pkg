@@ -26,10 +26,6 @@ func NewConsumer(conf config.CustomerConfig) *Consumer {
 		Brokers: conf.Brokers,
 		GroupID: conf.GroupID,
 		Topic:   conf.Topic,
-		//MinBytes:       10e3, // 10KB
-		//MaxBytes:       10e6, // 10MB
-		//CommitInterval: 0,    // 禁用自动提交
-		//StartOffset:    kafka.FirstOffset,
 	}
 	reader := kafka.NewReader(kafkaConf)
 	return &Consumer{
@@ -52,13 +48,13 @@ func (c *Consumer) Close() error {
 
 func (c *Consumer) sendDeadLetterQueue(ctx context.Context, topic string, msg *KafkaMessage) {
 	headT := "mq_dead_letter:"
-	if strings.HasPrefix(topic, headT) {
-		return
+	if !strings.HasPrefix(topic, headT) {
+		topic = headT + topic
 	}
 
 	cf := config.ProviderConfig{
 		Brokers: c.kafkaConf.Brokers,
-		Topic:   headT + topic,
+		Topic:   topic,
 	}
 	NewProducer(cf).ProduceMessageWithContext(ctx, msg)
 }
