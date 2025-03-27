@@ -2,7 +2,6 @@ package interceptors
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/doubunv/common-pkg/result/xcode"
 	"github.com/zeromicro/go-zero/core/logc"
 	"google.golang.org/grpc/status"
@@ -37,13 +36,11 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
-			marshal, _ := json.Marshal(msg)
-			logc.Info(ctx, string(marshal))
+			logc.Info(ctx, msg)
 			return nil
 		}
 		msg.Err = err.Error()
-		marshal, _ := json.Marshal(msg)
-		logc.Error(ctx, string(marshal))
+		logc.Error(ctx, msg)
 		gErr, ok := status.FromError(err)
 		if !ok {
 			return xcode.New(http.StatusInternalServerError, "Service catch err")
