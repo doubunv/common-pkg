@@ -18,6 +18,8 @@ type RpcAuthMiddleware struct {
 	Debug bool
 }
 
+type PathWhiteHandle func(ctx context.Context) map[string]int
+
 func NewRpcAuthMiddleware() *RpcAuthMiddleware {
 	return &RpcAuthMiddleware{}
 }
@@ -37,7 +39,7 @@ func (m *RpcAuthMiddleware) contextMetadataInLog(ctx context.Context) context.Co
 	return ctxNew
 }
 
-func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
+func (m *RpcAuthMiddleware) Handle(getPathWhite PathWhiteHandle) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
 		defer func() {
 			if p := recover(); p != nil {
@@ -52,7 +54,13 @@ func (m *RpcAuthMiddleware) Handle() grpc.UnaryServerInterceptor {
 			ctx = metadata.NewOutgoingContext(ctx, mdData)
 			ctx = m.contextMetadataInLog(ctx)
 			if headInfo.GetBusinessCode(ctx) == "" {
-				return nil, errors.New("Rpc metadata err")
+				if getPathWhite == nil {
+					return nil, errors.New("Rpc header data err")
+				}
+				whitePath := getPathWhite(ctx)
+				if _, okPath := whitePath[info.FullMethod]; !okPath {
+					return nil, errors.New("Rpc header data err")
+				}
 			}
 		}
 
