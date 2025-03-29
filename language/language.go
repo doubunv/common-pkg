@@ -15,6 +15,7 @@ import (
 var languageMap map[string]map[string]interface{}
 
 func init() {
+	languageMap = make(map[string]map[string]interface{})
 	dirPath := "etc/language"
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
