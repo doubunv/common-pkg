@@ -3,39 +3,51 @@ package language
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logc"
+	"os"
+	"path/filepath"
 	"reflect"
 	"runtime/debug"
 	"strings"
 )
 
-// 全局定义,会在IP解析的时候使用
-var LanguageStandMap = map[string]string{
-	"巴西": "pt-BR",
-}
-
-const EnglishLanguage = "en-US"
-const ChineseLanguage = "zh-CN"
-const IndiaLanguage = "hi-IN"
-const BRLanguage = "pt-BR"
-
-var indiaLanguageMap map[string]interface{}
-var chineseLanguageMap map[string]interface{}
-var bRLanguageMap map[string]interface{}
+var languageMap map[string]map[string]interface{}
 
 func init() {
-	json.Unmarshal([]byte(chineseLanguage), &chineseLanguageMap)
+	dirPath := "etc/language"
+	files, err := os.ReadDir(dirPath)
+	if err != nil {
+		fmt.Println("读取文件夹时发生错误:", err)
+		return
+	}
+	for _, file := range files {
+		if !file.IsDir() {
+			readJson(dirPath + "/" + file.Name())
+		}
+	}
 }
 
-func SwitchLanguageDic(data string, language string) interface{} {
-	if language == EnglishLanguage {
-		return data
+func readJson(filePath string) {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		fmt.Printf("文件 %s 不存在\n", filePath)
+		return
 	}
-	languageData := getLanguageData(language)
-	if newValue, ok := languageData[data]; ok {
-		return newValue
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("打开文件时发生错误:", err)
+		return
 	}
-	return data
+	defer file.Close() // 确保文件最终会关闭
+	var data map[string]interface{}
+	if err := json.NewDecoder(file).Decode(&data); err != nil {
+		fmt.Println("解析 JSON 时发生错误:", err)
+		return
+	}
+
+	baseName := filepath.Base(file.Name())
+	fileNameWithoutExt := baseName[:len(baseName)-len(filepath.Ext(baseName))]
+	languageMap[fileNameWithoutExt] = data
 }
 
 func SwitchLanguage(data interface{}, language string) interface{} {
@@ -46,22 +58,11 @@ func SwitchLanguage(data interface{}, language string) interface{} {
 		}
 	}()
 
-	if language == EnglishLanguage {
+	if _, ok := languageMap[language]; !ok {
 		return data
 	}
-	return recursiveGetAllValues(data, getLanguageData(language))
-}
 
-func getLanguageData(language string) map[string]interface{} {
-	switch language {
-	case IndiaLanguage:
-		return indiaLanguageMap
-	case ChineseLanguage:
-		return chineseLanguageMap
-	case BRLanguage:
-		return bRLanguageMap
-	}
-	return nil
+	return recursiveGetAllValues(data, languageMap[language])
 }
 
 func checkType(data interface{}) bool {

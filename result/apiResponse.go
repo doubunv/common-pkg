@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/doubunv/common-pkg/headInfo"
+	"github.com/doubunv/common-pkg/language"
 	"github.com/doubunv/common-pkg/result/xcode"
 	"net/http"
 
@@ -20,6 +22,7 @@ func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interfac
 		logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
 	}()
 
+	language.SwitchLanguage(success, headInfo.GetContentLanguage(ctx))
 	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
 }
 
@@ -44,5 +47,6 @@ func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
 		logc.Info(ctx, "ApiResponse:", string(logSuc))
 	}()
 
+	language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
 	httpx.WriteJsonCtx(ctx, w, http.StatusOK, resp)
 }
