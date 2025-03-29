@@ -59,6 +59,10 @@ func SwitchLanguage(data interface{}, language string) interface{} {
 		}
 	}()
 
+	if data == nil {
+		return data
+	}
+
 	if _, ok := languageMap[language]; !ok {
 		return data
 	}
@@ -100,7 +104,7 @@ func recursiveGetAllValues(data interface{}, newData map[string]interface{}) int
 					bl = true
 				}
 
-				if newValue, ok := newData[value.(string)]; ok && !bl {
+				if newValue, ok := newData[strings.TrimSpace(value.(string))]; ok && !bl {
 					result[key.String()] = newValue
 				}
 			}

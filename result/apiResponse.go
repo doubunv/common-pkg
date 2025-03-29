@@ -16,13 +16,13 @@ import (
 )
 
 func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interface{}) {
-	success := Success(resp, trace.TraceIDFromContext(ctx))
+	success := Success(language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx)), trace.TraceIDFromContext(ctx))
 	go func() {
 		logSucc, _ := json.Marshal(success)
 		logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
 	}()
 
-	httpx.WriteJsonCtx(ctx, w, http.StatusOK, language.SwitchLanguage(success, headInfo.GetContentLanguage(ctx)))
+	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
 }
 
 func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
