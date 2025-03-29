@@ -6,7 +6,6 @@ toolchain go1.22.4
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/segmentio/kafka-go v0.4.47
@@ -39,6 +38,7 @@ require (
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect

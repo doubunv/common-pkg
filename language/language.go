@@ -54,7 +54,7 @@ func readJson(filePath string) {
 func SwitchLanguage(data interface{}, language string) interface{} {
 	defer func() {
 		if err := recover(); err != nil {
-			logc.Errorf(context.Background(), "ConsumeMessagesWithContext error:%v, %s", err, string(debug.Stack()))
+			logc.Errorf(context.Background(), "SwitchLanguage error:%v, %s", err, string(debug.Stack()))
 			return
 		}
 	}()

@@ -22,8 +22,7 @@ func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interfac
 		logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
 	}()
 
-	language.SwitchLanguage(success, headInfo.GetContentLanguage(ctx))
-	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
+	httpx.WriteJsonCtx(ctx, w, http.StatusOK, language.SwitchLanguage(success, headInfo.GetContentLanguage(ctx)))
 }
 
 func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
@@ -47,6 +46,5 @@ func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
 		logc.Info(ctx, "ApiResponse:", string(logSuc))
 	}()
 
-	language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
-	httpx.WriteJsonCtx(ctx, w, http.StatusOK, resp)
+	httpx.WriteJsonCtx(ctx, w, http.StatusOK, language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx)))
 }
