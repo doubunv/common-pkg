@@ -13,6 +13,8 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
+const PLATFORM_BUSINESS_CODE = "99999999"
+
 type Head struct {
 	AuthorizationJwt string `json:"authorization_jwt"` // 用户token
 	Version          string `json:"version"`           // APP版本
