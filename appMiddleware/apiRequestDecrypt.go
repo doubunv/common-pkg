@@ -19,19 +19,17 @@ type RequestDecryptData struct {
 }
 
 type ApiRequestDecryptMiddleware struct {
-	aesKey string
-	debug  bool
 }
 
 func DecryptKeyOption(aesKey string) ApiRequestDecryptOption {
 	return func(m *ApiRequestDecryptMiddleware) {
-		m.aesKey = aesKey
+		aesGCM.EncryptKey = []byte(aesKey)
 	}
 }
 
-func DecryptWithDebugOption() ApiRequestDecryptOption {
+func DecryptWithDebugFalseOption() ApiRequestDecryptOption {
 	return func(m *ApiRequestDecryptMiddleware) {
-		m.debug = true
+		aesGCM.IsOpenAesGcm = true
 	}
 }
 
@@ -58,11 +56,6 @@ func (m *ApiRequestDecryptMiddleware) Handle(next http.HandlerFunc) http.Handler
 }
 
 func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
-	if m.debug {
-		return nil
-	}
-	aesGCM.EncryptKey = []byte(m.aesKey)
-
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		return RequestDecryptError
