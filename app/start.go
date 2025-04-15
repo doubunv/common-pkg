@@ -25,6 +25,12 @@ func WithTestOption() SMOption {
 	}
 }
 
+func WithAesKeyOption(aesKey string) SMOption {
+	return func(s *ServerMiddleware) {
+		s.aesKey = aesKey
+	}
+}
+
 func WithCheckTokenHandleSMOption(fun appMiddleware.CheckRequestTokenFunc) SMOption {
 	return func(s *ServerMiddleware) {
 		s.checkTokenHandle = fun
@@ -39,6 +45,7 @@ type ServerMiddleware struct {
 
 	isDebug bool
 	isTest  bool
+	aesKey  string
 }
 
 func NewServerMiddleware(s *rest.Server, opt ...SMOption) *ServerMiddleware {
@@ -55,6 +62,7 @@ func NewServerMiddleware(s *rest.Server, opt ...SMOption) *ServerMiddleware {
 
 func (s *ServerMiddleware) ApiUseMiddleware() {
 	s.Server.Use(appMiddleware.NewCorsMiddleware().Handle)
+	s.useApiRequestDecrypt()
 	s.useApiHeaderMiddleware()
 	s.mustUserAgentMiddleware()
 }
@@ -79,5 +87,17 @@ func (s *ServerMiddleware) mustUserAgentMiddleware() {
 	s.Server.Use(appMiddleware.NewUserAgentMiddleware(
 		s.whiteHeader,
 		appMiddleware.WithCheckOption(s.checkTokenHandle),
+	).Handle)
+}
+
+func (s *ServerMiddleware) useApiRequestDecrypt() {
+	var apiOption = []appMiddleware.ApiRequestDecryptOption{
+		appMiddleware.DecryptKeyOption(s.aesKey),
+	}
+	if s.isDebug {
+		apiOption = append(apiOption, appMiddleware.DecryptWithDebugOption())
+	}
+	s.Server.Use(appMiddleware.NewApiRequestDecryptMiddleware(
+		apiOption...,
 	).Handle)
 }

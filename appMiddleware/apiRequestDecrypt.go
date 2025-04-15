@@ -12,18 +12,36 @@ import (
 
 var RequestDecryptError = errors.New("Request decryption failed. ")
 
+type ApiRequestDecryptOption func(m *ApiRequestDecryptMiddleware)
+
 type RequestDecryptData struct {
 	AesData string `json:"aes_data"`
 }
 
 type ApiRequestDecryptMiddleware struct {
+	aesKey string
+	debug  bool
 }
 
-func NewApiRequestDecryptMiddleware(key []byte, isOpen bool) *ApiRequestDecryptMiddleware {
-	aesGCM.IsOpenAesGcm = isOpen
-	aesGCM.EncryptKey = key
+func DecryptKeyOption(aesKey string) ApiRequestDecryptOption {
+	return func(m *ApiRequestDecryptMiddleware) {
+		m.aesKey = aesKey
+	}
+}
 
-	return &ApiRequestDecryptMiddleware{}
+func DecryptWithDebugOption() ApiRequestDecryptOption {
+	return func(m *ApiRequestDecryptMiddleware) {
+		m.debug = true
+	}
+}
+
+func NewApiRequestDecryptMiddleware(arg ...ApiRequestDecryptOption) *ApiRequestDecryptMiddleware {
+	res := &ApiRequestDecryptMiddleware{}
+	for _, o := range arg {
+		o(res)
+	}
+
+	return res
 }
 
 func (m *ApiRequestDecryptMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
@@ -40,6 +58,11 @@ func (m *ApiRequestDecryptMiddleware) Handle(next http.HandlerFunc) http.Handler
 }
 
 func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
+	if m.debug {
+		return nil
+	}
+	aesGCM.EncryptKey = []byte(m.aesKey)
+
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
 		return RequestDecryptError
