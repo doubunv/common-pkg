@@ -95,7 +95,7 @@ func (s *ServerMiddleware) useApiRequestDecrypt() {
 		appMiddleware.DecryptKeyOption(s.aesKey),
 	}
 	if s.isDebug {
-		apiOption = append(apiOption, appMiddleware.DecryptWithDebugOption())
+		apiOption = append(apiOption, appMiddleware.DecryptWithDebugFalseOption())
 	}
 	s.Server.Use(appMiddleware.NewApiRequestDecryptMiddleware(
 		apiOption...,
