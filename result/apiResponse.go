@@ -32,6 +32,8 @@ func interfaceToBytes(data interface{}) ([]byte, error) {
 }
 
 func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interface{}) {
+	resp = language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
+
 	if aesGCM.IsOpenAesGcm {
 		respByte, err := interfaceToBytes(resp)
 		if err != nil {
@@ -47,7 +49,7 @@ func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interfac
 		}
 	}
 
-	success := Success(language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx)), trace.TraceIDFromContext(ctx))
+	success := Success(resp, trace.TraceIDFromContext(ctx))
 	go func() {
 		logSucc, _ := json.Marshal(success)
 		logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
