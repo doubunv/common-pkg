@@ -10,12 +10,13 @@ import (
 	"reflect"
 	"runtime/debug"
 	"strings"
+	"sync"
 )
 
-var languageMap map[string]map[string]interface{}
+var languageMap sync.Map
 
 func init() {
-	languageMap = make(map[string]map[string]interface{})
+	//languageMap = make(map[string]map[string]interface{})
 	dirPath := "etc/language"
 	files, err := os.ReadDir(dirPath)
 	if err != nil {
@@ -48,7 +49,7 @@ func readJson(filePath string) {
 
 	baseName := filepath.Base(file.Name())
 	fileNameWithoutExt := baseName[:len(baseName)-len(filepath.Ext(baseName))]
-	languageMap[fileNameWithoutExt] = data
+	languageMap.Store(fileNameWithoutExt, data)
 }
 
 func SwitchLanguage(data interface{}, language string) interface{} {
@@ -63,11 +64,11 @@ func SwitchLanguage(data interface{}, language string) interface{} {
 		return data
 	}
 
-	if _, ok := languageMap[language]; !ok {
+	if lg, ok := languageMap.Load(language); ok {
+		return recursiveGetAllValues(data, lg.(map[string]interface{}))
+	} else {
 		return data
 	}
-
-	return recursiveGetAllValues(data, languageMap[language])
 }
 
 func checkType(data interface{}) bool {
