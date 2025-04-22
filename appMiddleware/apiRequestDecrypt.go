@@ -75,7 +75,9 @@ func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 		return RequestDecryptError
 	}
 
-	r.Body = io.NopCloser(bytes.NewBuffer(deData))
+	if deData != nil {
+		r.Body = io.NopCloser(bytes.NewBuffer(deData))
+	}
 
 	return nil
 }
