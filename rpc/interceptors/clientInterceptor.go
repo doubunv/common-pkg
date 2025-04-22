@@ -18,6 +18,7 @@ type msgPrint struct {
 	Req     interface{} `json:"req"`
 	Reply   interface{} `json:"reply"`
 	Err     string      `json:"err"`
+	Method  string      `json:"method"`
 }
 
 func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
@@ -33,6 +34,7 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 			RpcName: rpcName,
 			Req:     req,
 			Reply:   reply,
+			Method:  method,
 		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		if err == nil {
