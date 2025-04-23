@@ -70,6 +70,11 @@ func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 		return RequestDecryptError
 	}
 
+	if decryptData.AesData == "" {
+		r.Body = io.NopCloser(bytes.NewBuffer(data))
+		return nil
+	}
+
 	deData, err := aesGCM.Decrypt(aesGCM.EncryptKey, decryptData.AesData)
 	if err != nil {
 		return RequestDecryptError

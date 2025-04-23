@@ -87,7 +87,7 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 						logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
 					}
 				}()
-				for i := 0; i < 3; i++ { // 最大重试次数
+				for i := 1; i < 4; i++ { // 最大重试次数
 					err = handler(newCtx, ka.GetMsg())
 					if err == nil {
 						break
