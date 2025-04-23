@@ -58,7 +58,7 @@ func (m *ApiRequestDecryptMiddleware) Handle(next http.HandlerFunc) http.Handler
 func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
-		return RequestDecryptError
+		return nil
 	}
 
 	if len(data) == 0 {
@@ -67,7 +67,7 @@ func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 	// Decrypt the data here
 	var decryptData RequestDecryptData
 	if err = json.Unmarshal(data, &decryptData); err != nil {
-		return RequestDecryptError
+		return nil
 	}
 
 	if decryptData.AesData == "" {
