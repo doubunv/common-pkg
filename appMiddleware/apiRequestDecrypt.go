@@ -15,7 +15,7 @@ var RequestDecryptError = errors.New("Request decryption failed. ")
 type ApiRequestDecryptOption func(m *ApiRequestDecryptMiddleware)
 
 type RequestDecryptData struct {
-	AesData string `json:"aes_data"`
+	AesData string `json:"aes_data,default=''"`
 }
 
 type ApiRequestDecryptMiddleware struct {
@@ -67,6 +67,7 @@ func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 	// Decrypt the data here
 	var decryptData RequestDecryptData
 	if err = json.Unmarshal(data, &decryptData); err != nil {
+		r.Body = io.NopCloser(bytes.NewBuffer(data))
 		return nil
 	}
 
