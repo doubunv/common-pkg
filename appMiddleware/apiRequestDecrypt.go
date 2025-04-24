@@ -5,12 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/doubunv/common-pkg/aesGCM"
+	"github.com/doubunv/common-pkg/consts"
 	"github.com/doubunv/common-pkg/result"
 	"io"
 	"net/http"
 )
 
 var RequestDecryptError = errors.New("Request decryption failed. ")
+
+var RequestBadError = errors.New("Request bad. ")
 
 type ApiRequestDecryptOption func(m *ApiRequestDecryptMiddleware)
 
@@ -69,6 +72,10 @@ func (m *ApiRequestDecryptMiddleware) RequestDecrypt(r *http.Request) error {
 	if err = json.Unmarshal(data, &decryptData); err != nil {
 		r.Body = io.NopCloser(bytes.NewBuffer(data))
 		return nil
+	}
+
+	if decryptData.AesData == "" && r.Header.Get(consts.BusinessCode) != "" {
+		return RequestBadError
 	}
 
 	if decryptData.AesData == "" {
