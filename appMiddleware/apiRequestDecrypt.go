@@ -13,7 +13,7 @@ import (
 
 var RequestDecryptError = errors.New("Request decryption failed. ")
 
-var RequestBadError = errors.New("Request bad. ")
+var RequestBadError = errors.New("Request forbid. ")
 
 type ApiRequestDecryptOption func(m *ApiRequestDecryptMiddleware)
 
