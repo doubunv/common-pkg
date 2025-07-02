@@ -9,31 +9,6 @@ import (
 	"time"
 )
 
-func MySqlConnect(conf string) *gorm.DB {
-	var (
-		err error
-		res *gorm.DB
-	)
-	res, err = gorm.Open(mysql.Open(conf), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
-	if err != nil {
-		panic(err.Error())
-	}
-
-	sqlDB, err := res.DB()
-	if err != nil {
-		panic("mysql connect err," + conf + "," + err.Error())
-	}
-
-	sqlDB.SetMaxIdleConns(5)
-	sqlDB.SetMaxOpenConns(20)
-	sqlDB.SetConnMaxLifetime(time.Hour)
-
-	logx.Info("mysql connect success")
-	return res
-}
-
 func MySqlConnectV2(conf string, logLevel int) *gorm.DB {
 	var (
 		err error

@@ -16,12 +16,12 @@ type SelectDb struct {
 	dbMap map[string]*gorm.DB
 }
 
-func NewSelectDb(config []SelectDbConfig) *SelectDb {
+func NewSelectDb(config []SelectDbConfig, logLevel int) *SelectDb {
 	res := &SelectDb{
 		dbMap: make(map[string]*gorm.DB),
 	}
 	for _, v := range config {
-		db := MySqlConnect(v.DataSource)
+		db := MySqlConnectV2(v.DataSource, logLevel)
 		if db.Error != nil {
 			panic(db.Error)
 		}
