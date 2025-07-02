@@ -87,16 +87,15 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 						logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
 					}
 				}()
-				for i := 1; i < 4; i++ { // 最大重试次数
+				for i := int64(1); i < 4; i++ { // 最大重试次数
 					err = handler(newCtx, ka.GetMsg())
 					if err == nil {
 						break
 					}
-					if i == 2 {
+					if i == 3 {
 						c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
-						break
 					}
-					time.Sleep(500 * time.Millisecond) // 等待一段时间
+					time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
 				}
 			}(msg)
 		}
