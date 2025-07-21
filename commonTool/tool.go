@@ -1,6 +1,7 @@
 package commonTool
 
 import (
+	uuid "github.com/satori/go.uuid"
 	"math/rand"
 	"time"
 )
@@ -28,4 +29,36 @@ func DiffTimeUnix(timeStr1, timeStr2 string) int64 {
 	t1, _ := time.Parse(layout, timeStr1)
 	t2, _ := time.Parse(layout, timeStr2)
 	return int64(t2.Sub(t1))
+}
+
+func GetTodayZeroTimeInt() int64 {
+	now := time.Now()
+	startOfYesterday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	return startOfYesterday.Unix()
+}
+
+func GetYesterdayZeroTimeInt() int64 {
+	now := time.Now().Add(time.Hour * -24)
+	startOfYesterday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	return startOfYesterday.Unix()
+}
+
+func GetMonthZeroTimeInt() int64 {
+	now := time.Now()
+	startOfYesterday := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
+	return startOfYesterday.Unix()
+}
+
+func GetLastMonthZeroTimeInt() int64 {
+	now := time.Now()
+	// 减去一个月
+	lastMonth := now.AddDate(0, -1, 0)
+
+	startOfYesterday := time.Date(lastMonth.Year(), lastMonth.Month(), 1, 0, 0, 0, 0, time.UTC)
+	return startOfYesterday.Unix()
+}
+
+func GenUUID() uuid.UUID {
+	v1 := uuid.NewV1()
+	return v1
 }
