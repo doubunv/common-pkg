@@ -31,6 +31,11 @@ func DiffTimeUnix(timeStr1, timeStr2 string) int64 {
 	return int64(t2.Sub(t1))
 }
 
+func GetNowTime() int64 {
+	now := time.Now().UTC()
+	return now.Unix()
+}
+
 func GetTodayZeroTimeInt() int64 {
 	now := time.Now()
 	startOfYesterday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
