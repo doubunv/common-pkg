@@ -42,7 +42,7 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 			return nil
 		}
 		msg.Err = err.Error()
-		logc.Errorf(ctx, "%+v", msg)
+		//logc.Errorf(ctx, "%+v", msg)
 		gErr, ok := status.FromError(err)
 		if !ok {
 			return xcode.New(http.StatusInternalServerError, "Service catch err")
