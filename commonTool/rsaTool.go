@@ -33,7 +33,7 @@ func GenerateSignature(secretKey string, privateKey string) (string, error) {
 	return base64.StdEncoding.EncodeToString(signature), nil
 }
 
-func VerifySignature(message string, signature string, publicKey string) (bool, error) {
+func VerifySignature(secretKey string, signature string, publicKey string) (bool, error) {
 	// 解析公钥
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil {
@@ -51,7 +51,7 @@ func VerifySignature(message string, signature string, publicKey string) (bool, 
 
 	// 签名
 	hash := sha256.New()
-	hash.Write([]byte(message))
+	hash.Write([]byte(secretKey))
 	hashed := hash.Sum(nil)
 	// 验证签名
 	decodeString, err := base64.StdEncoding.DecodeString(signature)
