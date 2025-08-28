@@ -55,6 +55,14 @@ func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interfac
 	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
 }
 
+func HttpSuccessResultNotAes(ctx context.Context, w http.ResponseWriter, resp interface{}) {
+	resp = language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
+	logSucc, _ := json.Marshal(Success(resp, trace.TraceIDFromContext(ctx)))
+	logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
+	success := Success(resp, trace.TraceIDFromContext(ctx))
+	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
+}
+
 func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
 	var (
 		xerr xcode.XCode
