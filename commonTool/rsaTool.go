@@ -12,7 +12,7 @@ import (
 )
 
 func GenerateSignature(secretKey string, privateKey string) (string, error) {
-	privateKey = "-----BEGIN PUBLIC KEY-----\r\n" + privateKey + "\r\n-----END PUBLIC KEY-----"
+	privateKey = "-----BEGIN RSA PRIVATE KEY-----\r\n" + privateKey + "\r\n-----END RSA PRIVATE KEY-----"
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
 		return "", errors.New("failed to parse PEM block containing the private key")
