@@ -1,6 +1,8 @@
 package commonTool
 
 import (
+	"crypto"
+	"encoding/hex"
 	uuid "github.com/satori/go.uuid"
 	"math/rand"
 	"time"
@@ -66,4 +68,10 @@ func GetLastMonthZeroTimeInt() int64 {
 func GenUUID() uuid.UUID {
 	v1 := uuid.NewV1()
 	return v1
+}
+
+func Md5(str string) string {
+	h := crypto.MD5.New()
+	_, _ = h.Write([]byte(str))
+	return hex.EncodeToString(h.Sum(nil))
 }
