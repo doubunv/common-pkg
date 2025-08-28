@@ -12,6 +12,7 @@ import (
 )
 
 func GenerateSignature(secretKey string, privateKey string) (string, error) {
+	privateKey = "-----BEGIN PUBLIC KEY-----\r\n" + privateKey + "\r\n-----END PUBLIC KEY-----"
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
 		return "", errors.New("failed to parse PEM block containing the private key")
@@ -35,6 +36,7 @@ func GenerateSignature(secretKey string, privateKey string) (string, error) {
 
 func VerifySignature(secretKey string, signature string, publicKey string) (bool, error) {
 	// 解析公钥
+	publicKey = "-----BEGIN PUBLIC KEY-----\r\n" + publicKey + "\r\n-----END PUBLIC KEY-----"
 	block, _ := pem.Decode([]byte(publicKey))
 	if block == nil {
 		return false, errors.New("failed to parse PEM block containing the public key")
