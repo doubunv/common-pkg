@@ -28,6 +28,7 @@ type Head struct {
 	ContentLanguage  string `json:"content_language"`
 	TokenUidRole     string `json:"token_uid_role"`
 	ReqOrigin        string `json:"req_origin"` // 请求地址
+	Timezone         string `json:"timezone"`
 }
 
 func GetHead(r *http.Request) *Head {
@@ -45,6 +46,7 @@ func GetHead(r *http.Request) *Head {
 		TokenUid:         "",
 		TokenUidRole:     "",
 		ReqOrigin:        strings.Trim(header.Get("Origin"), " "),
+		Timezone:         strings.Trim(header.Get(consts.Timezone), " "),
 	}
 }
 
@@ -71,6 +73,7 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 		logx.Field(consts.ContentLanguage, h.ContentLanguage),
 		logx.Field(consts.TokenUidRole, h.TokenUidRole),
 		logx.Field(consts.OriginUrl, h.ReqOrigin),
+		logx.Field(consts.Timezone, h.Timezone),
 	)
 	return ctxNew
 }
@@ -112,6 +115,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.ContentLanguage, h.ContentLanguage,
 		consts.TokenUidRole, h.TokenUidRole,
 		consts.OriginUrl, h.ReqOrigin,
+		consts.Timezone, h.Timezone,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)

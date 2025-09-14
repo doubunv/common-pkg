@@ -14,6 +14,7 @@ const (
 	BusinessCode    = "business_code"
 	ContentLanguage = "content_language"
 	OriginUrl       = "origin_url"
+	Timezone        = "timezone"
 )
 
 const (

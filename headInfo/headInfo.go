@@ -149,3 +149,12 @@ func GetTerminal(ctx context.Context) string {
 	}
 	return res
 }
+
+func GetTimezone(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.Timezone), "")
+	return res
+}
