@@ -15,3 +15,11 @@ const (
 	ContentLanguage = "content_language"
 	OriginUrl       = "origin_url"
 )
+
+const (
+	APP     = "app"
+	IOS     = "ios"
+	Android = "android"
+	PC      = "pc"
+	H5      = "h5"
+)

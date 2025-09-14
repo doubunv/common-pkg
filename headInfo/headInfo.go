@@ -137,3 +137,15 @@ func GetOriginHostUrl(ctx context.Context) string {
 
 	return res
 }
+
+func GetTerminal(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.Source), "")
+	if res == consts.IOS || res == consts.Android {
+		return consts.APP
+	}
+	return res
+}
