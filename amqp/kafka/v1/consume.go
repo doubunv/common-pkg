@@ -77,27 +77,37 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 			ka := &KafkaMessage{}
 			err = json.Unmarshal(msg.Value, ka)
 			if err != nil {
-				logc.Errorf(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg:%+v, err: %+v", msg.Topic, string(msg.Value), err)
+				//logc.Errorf(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg:%+v, err: %+v", msg.Topic, string(msg.Value), err)
 				continue
 			}
 			newCtx = ka.SetContext(newCtx)
-			go func(msg kafka.Message) {
-				defer func() {
-					if err := recover(); err != nil {
-						logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
-					}
-				}()
-				for i := int64(1); i < 4; i++ { // 最大重试次数
-					err = handler(newCtx, ka.GetMsg())
-					if err == nil {
-						break
-					}
-					if i == 3 {
-						c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
-					}
-					time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
+			for i := int64(1); i < 4; i++ { // 最大重试次数
+				err = handler(newCtx, ka.GetMsg())
+				if err == nil {
+					break
 				}
-			}(msg)
+				if i == 3 {
+					c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
+				}
+				time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
+			}
+			//go func(msg kafka.Message) {
+			//	defer func() {
+			//		if err := recover(); err != nil {
+			//			logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
+			//		}
+			//	}()
+			//	for i := int64(1); i < 4; i++ { // 最大重试次数
+			//		err = handler(newCtx, ka.GetMsg())
+			//		if err == nil {
+			//			break
+			//		}
+			//		if i == 3 {
+			//			c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
+			//		}
+			//		time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
+			//	}
+			//}(msg)
 		}
 	}()
 	select {}
