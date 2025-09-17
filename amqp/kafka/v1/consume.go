@@ -88,6 +88,7 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 				}
 				if i == 3 {
 					c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
+					break
 				}
 				time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
 			}
