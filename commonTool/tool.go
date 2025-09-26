@@ -3,6 +3,7 @@ package commonTool
 import (
 	"crypto"
 	"encoding/hex"
+	"fmt"
 	uuid "github.com/satori/go.uuid"
 	"math/rand"
 	"time"
@@ -74,4 +75,18 @@ func Md5(str string) string {
 	h := crypto.MD5.New()
 	_, _ = h.Write([]byte(str))
 	return hex.EncodeToString(h.Sum(nil))
+}
+
+// 获取当前时区的0点时间戳
+func GetXZeroTodayTimeInt(X int) int64 {
+	// 创建时区偏移量
+	loc := time.FixedZone(fmt.Sprintf("UTC+%d", X), X*3600)
+	// 获取当前时间
+	now := time.Now().In(loc)
+
+	// 获取今天的0点时间
+	zeroHour := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc)
+
+	// 获取0点时间的时间戳
+	return zeroHour.Unix()
 }
