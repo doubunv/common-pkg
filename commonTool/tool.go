@@ -77,7 +77,7 @@ func Md5(str string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-// 获取当前时区的0点时间戳
+// 获取当前时区的0点时间戳,东8区就传8
 func GetXZeroTodayTimeInt(X int) int64 {
 	// 创建时区偏移量
 	loc := time.FixedZone(fmt.Sprintf("UTC+%d", X), X*3600)
