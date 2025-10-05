@@ -23,9 +23,10 @@ type Consumer struct {
 // NewConsumer   生成一个新的消费者
 func NewConsumer(conf config.CustomerConfig) *Consumer {
 	kafkaConf := kafka.ReaderConfig{
-		Brokers: conf.Brokers,
-		GroupID: conf.GroupID,
-		Topic:   conf.Topic,
+		Brokers:     conf.Brokers,
+		GroupID:     conf.GroupID,
+		Topic:       conf.Topic,
+		StartOffset: conf.StartOffset,
 	}
 	reader := kafka.NewReader(kafkaConf)
 	return &Consumer{
