@@ -8,6 +8,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-elasticsearch/v7 v7.17.10
 	github.com/elastic/go-elasticsearch/v8 v8.18.1
+	github.com/opensearch-project/opensearch-go v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/satori/go.uuid v1.2.0
