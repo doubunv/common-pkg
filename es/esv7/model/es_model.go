@@ -17,6 +17,13 @@ type EsModel struct {
 	Db  *core.Es
 }
 
+func NewEsModel(ctx context.Context, Db *core.Es) *EsModel {
+	return &EsModel{
+		Ctx: ctx,
+		Db:  Db,
+	}
+}
+
 func (model *EsModel) GetDb() *core.Es {
 	if model.Db != nil {
 		return model.Db
