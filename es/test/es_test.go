@@ -34,9 +34,9 @@ func (m *MyIndexTable) SetId(id string) {
 
 func TestLogInfo(t *testing.T) {
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{"https://54.179.96.217:10086"},
+		Addresses:  []string{"https://xxx"},
 		Username:   "admin",
-		Password:   "sddssxoSs67As::",
+		Password:   "",
 		MaxRetries: 3,
 	})
 
