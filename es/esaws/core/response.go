@@ -17,7 +17,7 @@ var EsNotFound = errors.New("Es not found. ")
 
 func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response) error {
 	if resEs.StatusCode == http.StatusNotFound {
-		return EsNotFound
+		return nil
 	}
 
 	if resEs.IsError() {
