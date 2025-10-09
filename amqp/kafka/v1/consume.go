@@ -70,11 +70,11 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 		for {
 			newCtx := context.Background()
 			msg, err := c.reader.ReadMessage(newCtx)
-			logc.Infof(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg: %s", msg.Topic, string(msg.Value))
-			if string(msg.Value) == "" {
-				return
+			if msg.Value == nil || string(msg.Value) == "" {
+				continue
 			}
 
+			logc.Infof(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg: %s", msg.Topic, string(msg.Value))
 			ka := &KafkaMessage{}
 			err = json.Unmarshal(msg.Value, ka)
 			if err != nil {
