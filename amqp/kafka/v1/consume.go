@@ -94,10 +94,8 @@ func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
 				//}
 				time.Sleep(time.Second) // 等待一段时间
 			}
-			c.AckMessage(msg)
 
 			//go func(msg kafka.Message) {
-			//	defer c.AckMessage(msg)
 			//	defer func() {
 			//		if err := recover(); err != nil {
 			//			logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
