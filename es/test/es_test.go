@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/doubunv/common-pkg/es/esaws/core"
 	"github.com/doubunv/common-pkg/es/esaws/model"
+	"strconv"
 	"testing"
+	"time"
 )
 
 // 定义一个实现 IndexTable 接口的结构体
@@ -33,24 +35,24 @@ func (m *MyIndexTable) SetId(id string) {
 }
 
 func TestLogInfo(t *testing.T) {
+
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{"https://xxx"},
+		Addresses:  []string{"https://search-es-usdt-db-dev-fp3bbysw7vfmnn6u7segtwqxpa.aos.ap-southeast-1.on.aws"},
 		Username:   "admin",
-		Password:   "",
+		Password:   "Dev123456.",
 		MaxRetries: 3,
 	})
-
 	ctx := context.Background()
 	esModel := model.NewEsModel(ctx, esClient)
 
 	//创建
-	//tm := time.Now().Unix()
-	//data := &MyIndexTable{_indexName: "example_index", UserId: 1759848897, Amount: 1.78, PUserId: []int64{tm, tm + 1, tm + 2, tm + 3}, _id: strconv.FormatInt(tm, 10)}
-	//err := esModel.InsertSchema(data)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
+	tm := time.Now().Unix()
+	data := &MyIndexTable{_indexName: "example_index", UserId: 1759848897, Amount: 1.78, PUserId: []int64{tm, tm, tm + 2, tm + 3}, _id: strconv.FormatInt(tm, 10)}
+	err := esModel.InsertSchema(data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("end")
 
 	//查询单条
 	//data1 := &MyIndexTable{Name: "example_index"}
@@ -113,29 +115,29 @@ func TestLogInfo(t *testing.T) {
 	//fmt.Println(res, num)
 
 	//分组聚合查询
-	data4 := &MyIndexTable{_indexName: "example_index", _id: "1111"}
-	resData := MyIndexTable{}
-	res, num, aggregate, err := esModel.Search(data4, &resData, map[string]interface{}{
-		"size": 0, // 不需要返回具体文档
-		"aggs": map[string]interface{}{
-			"amount_by_user": map[string]interface{}{
-				"terms": map[string]interface{}{
-					"field": "user_id", // 按 user_id 分组
-				},
-				"aggs": map[string]interface{}{ // 对每组进行求和
-					"total_amount": map[string]interface{}{
-						"sum": map[string]interface{}{
-							"field": "amount", // 要累加的字段
-						},
-					},
-				},
-			},
-		},
-	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(aggregate)
-	fmt.Println(res, num)
+	//data4 := &MyIndexTable{_indexName: "example_index", _id: "1111"}
+	//resData := MyIndexTable{}
+	//res, num, aggregate, err := esModel.Search(data4, &resData, map[string]interface{}{
+	//	"size": 0, // 不需要返回具体文档
+	//	"aggs": map[string]interface{}{
+	//		"amount_by_user": map[string]interface{}{
+	//			"terms": map[string]interface{}{
+	//				"field": "user_id", // 按 user_id 分组
+	//			},
+	//			"aggs": map[string]interface{}{ // 对每组进行求和
+	//				"total_amount": map[string]interface{}{
+	//					"sum": map[string]interface{}{
+	//						"field": "amount", // 要累加的字段
+	//					},
+	//				},
+	//			},
+	//		},
+	//	},
+	//})
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//fmt.Println(aggregate)
+	//fmt.Println(res, num)
 }
