@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/doubunv/common-pkg/amqp/kafka/config"
 	"github.com/segmentio/kafka-go"
 	"github.com/zeromicro/go-zero/core/logc"
@@ -60,62 +61,105 @@ func (c *Consumer) sendDeadLetterQueue(ctx context.Context, topic string, msg *K
 	NewProducer(cf).ProduceMessageWithContext(ctx, msg)
 }
 
-func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
-	defer func() {
-		logc.Error(context.Background(), "******************************************************  MQ consume quit ****************************************************** ")
-	}()
-	go func() {
-		defer func() {
-			if err := recover(); err != nil {
-				logc.Errorf(context.Background(), "ConsumeMessagesWithContext recover error:%v, %s", err, string(debug.Stack()))
-			}
-		}()
-		for {
-			newCtx := context.Background()
-			msg, err := c.reader.ReadMessage(newCtx)
-			if err != nil || msg.Value == nil || string(msg.Value) == "" {
-				continue
-			}
+func (c *Consumer) ConsumeMessagesWithContext(ctx context.Context, handler MessageHandle) {
+	defer logc.Info(ctx, "MQ consumer stopped")
 
-			logc.Infof(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg: %s", msg.Topic, string(msg.Value))
-			ka := &KafkaMessage{}
-			err = json.Unmarshal(msg.Value, ka)
+	for {
+		select {
+		case <-ctx.Done():
+			logc.Info(ctx, "Context canceled, exiting consumer loop")
+			return
+		default:
+			msg, err := c.reader.ReadMessage(ctx)
 			if err != nil {
+				if errors.Is(err, context.Canceled) {
+					logc.Info(ctx, "ReadMessage canceled")
+					return
+				}
+				logc.Errorf(ctx, "ReadMessage error: %v", err)
+				time.Sleep(time.Second)
 				continue
 			}
 
-			newCtx = ka.SetContext(newCtx)
-			for i := int64(1); i < 4; i++ { // 最大重试次数
-				err = handler(newCtx, ka.GetMsg())
-				if err == nil {
-					break
-				}
-				//if i == 3 {
-				//c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
-				//break
-				//}
-				time.Sleep(time.Second) // 等待一段时间
+			if len(msg.Value) == 0 {
+				continue
 			}
 
-			//go func(msg kafka.Message) {
-			//	defer func() {
-			//		if err := recover(); err != nil {
-			//			logc.Errorf(context.Background(), "ConsumeMessagesWithContext handler error:%v, %s, %s", string(msg.Value), err, string(debug.Stack()))
-			//		}
-			//	}()
-			//	newCtx = ka.SetContext(newCtx)
-			//	for i := int64(1); i < 4; i++ { // 最大重试次数
-			//		err = handler(newCtx, ka.GetMsg())
-			//		if err == nil {
-			//			break
-			//		}
-			//		//if i == 3 {
-			//		//	c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
-			//		//}
-			//		time.Sleep(time.Duration(i) * time.Second) // 等待一段时间
-			//	}
-			//}(msg)
+			ka := &KafkaMessage{}
+			if err := json.Unmarshal(msg.Value, ka); err != nil {
+				logc.Errorf(ctx, "Unmarshal message error: %v, msg: %s", err, string(msg.Value))
+				continue
+			}
+
+			msgCtx := ka.SetContext(ctx)
+			go func() {
+				defer func() {
+					if r := recover(); r != nil {
+						logc.Errorf(ctx, "Panic recovered in handler: %v\n%s", r, string(debug.Stack()))
+					}
+				}()
+
+				const maxRetries = 3
+				delay := time.Second
+
+				for i := 1; i <= maxRetries; i++ {
+					if err := handler(msgCtx, ka.GetMsg()); err != nil {
+						logc.Infof(msgCtx, "Handle message error (try %d/%d): %v", i, maxRetries, err)
+						time.Sleep(delay)
+						delay *= 2 // 指数退避
+						continue
+					}
+					return
+				}
+
+				//logc.Errorf(msgCtx, "Message failed after retries, send to DLQ: %s", string(msg.Value))
+				//c.sendDeadLetterQueue(msgCtx, msg.Topic, ka)
+			}()
 		}
-	}()
-	select {}
+	}
 }
+
+//func (c *Consumer) ConsumeMessagesWithContext(handler MessageHandle) {
+//	go func() {
+//		defer func() {
+//			if err := recover(); err != nil {
+//				logc.Errorf(context.Background(), "ConsumeMessagesWithContext recover error:%v, %s", err, string(debug.Stack()))
+//			}
+//		}()
+//		defer func() {
+//			logc.Error(context.Background(), "******************************************************  MQ consume quit ****************************************************** ")
+//		}()
+//		for {
+//			newCtx := context.Background()
+//			msg, err := c.reader.ReadMessage(newCtx)
+//			if err != nil {
+//				time.Sleep(time.Second)
+//				continue
+//			}
+//			if msg.Value == nil || string(msg.Value) == "" {
+//				continue
+//			}
+//
+//			logc.Infof(newCtx, "---- kafka:ConsumeMessagesWithContext:topic: %s, msg: %s", msg.Topic, string(msg.Value))
+//			ka := &KafkaMessage{}
+//			err = json.Unmarshal(msg.Value, ka)
+//			if err != nil {
+//				continue
+//			}
+//
+//			newCtx = ka.SetContext(newCtx)
+//			for i := int64(1); i < 4; i++ { // 最大重试次数
+//				err = handler(newCtx, ka.GetMsg())
+//				if err == nil {
+//					break
+//				}
+//				//if i == 3 {
+//				//c.sendDeadLetterQueue(newCtx, msg.Topic, ka)
+//				//break
+//				//}
+//				time.Sleep(time.Second) // 等待一段时间
+//			}
+//		}
+//	}()
+//	select {}
+//}
