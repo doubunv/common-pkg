@@ -93,7 +93,7 @@ func basicAuth(username, password string) string {
 func InitESClient(conf *Config) (*Es, error) {
 	tlsConfig := &tls.Config{
 		MinVersion:         tls.VersionTLS12,
-		InsecureSkipVerify: false, // 建议生产环境关闭跳过
+		InsecureSkipVerify: true, // 建议生产环境关闭跳过
 	}
 
 	transport := &http.Transport{
