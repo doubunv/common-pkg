@@ -61,13 +61,59 @@ func (c *Consumer) sendDeadLetterQueue(ctx context.Context, topic string, msg *K
 	NewProducer(cf).ProduceMessageWithContext(ctx, msg)
 }
 
+func (c *Consumer) handleMessage(ctx context.Context, handler MessageHandle, msg kafka.Message) {
+	defer func() {
+		if r := recover(); r != nil {
+			logc.Errorf(ctx, "Panic recovered in handler: %v\n%s", r, string(debug.Stack()))
+		}
+	}()
+
+	if len(msg.Value) == 0 {
+		return
+	}
+
+	ka := &KafkaMessage{}
+	if err := json.Unmarshal(msg.Value, ka); err != nil {
+		logc.Errorf(ctx, "Unmarshal message error: %v, msg: %s", err, string(msg.Value))
+		return
+	}
+
+	msgCtx := ka.SetContext(ctx)
+
+	const maxRetries = 3
+	delay := time.Second
+	for i := 1; i <= maxRetries; i++ {
+		if err := handler(msgCtx, ka.GetMsg()); err != nil {
+			logc.Infof(msgCtx, "Handle message error (try %d/%d): %v", i, maxRetries, err)
+			time.Sleep(delay)
+			delay *= 2
+			continue
+		}
+		return
+	}
+
+	logc.Errorf(msgCtx, "Message failed after retries, send to DLQ: %s", string(msg.Value))
+	// c.sendDeadLetterQueue(msgCtx, msg.Topic, ka)
+}
+
 func (c *Consumer) ConsumeMessagesWithContext(ctx context.Context, handler MessageHandle) {
 	defer logc.Error(ctx, "MQ consumer stopped")
+	const workerCount = 100
+	msgCh := make(chan kafka.Message, 100)
+
+	for i := 0; i < workerCount; i++ {
+		go func() {
+			for msg := range msgCh {
+				c.handleMessage(ctx, handler, msg)
+			}
+		}()
+	}
 
 	for {
 		select {
 		case <-ctx.Done():
-			logc.Error(ctx, "Context canceled, exiting consumer loop")
+			close(msgCh)
+			logc.Info(ctx, "Context canceled, exiting consumer loop")
 			return
 		default:
 			msg, err := c.reader.ReadMessage(ctx)
@@ -80,41 +126,7 @@ func (c *Consumer) ConsumeMessagesWithContext(ctx context.Context, handler Messa
 				time.Sleep(time.Second)
 				continue
 			}
-
-			if len(msg.Value) == 0 {
-				continue
-			}
-
-			ka := &KafkaMessage{}
-			if err := json.Unmarshal(msg.Value, ka); err != nil {
-				logc.Errorf(ctx, "Unmarshal message error: %v, msg: %s", err, string(msg.Value))
-				continue
-			}
-
-			msgCtx := ka.SetContext(ctx)
-			go func() {
-				defer func() {
-					if r := recover(); r != nil {
-						logc.Errorf(ctx, "Panic recovered in handler: %v\n%s", r, string(debug.Stack()))
-					}
-				}()
-
-				const maxRetries = 3
-				delay := time.Second
-
-				for i := 1; i <= maxRetries; i++ {
-					if err := handler(msgCtx, ka.GetMsg()); err != nil {
-						logc.Infof(msgCtx, "Handle message error (try %d/%d): %v", i, maxRetries, err)
-						time.Sleep(delay)
-						delay *= 2 // 指数退避
-						continue
-					}
-					return
-				}
-
-				//logc.Errorf(msgCtx, "Message failed after retries, send to DLQ: %s", string(msg.Value))
-				//c.sendDeadLetterQueue(msgCtx, msg.Topic, ka)
-			}()
+			msgCh <- msg
 		}
 	}
 }
