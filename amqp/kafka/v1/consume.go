@@ -62,12 +62,12 @@ func (c *Consumer) sendDeadLetterQueue(ctx context.Context, topic string, msg *K
 }
 
 func (c *Consumer) ConsumeMessagesWithContext(ctx context.Context, handler MessageHandle) {
-	defer logc.Info(ctx, "MQ consumer stopped")
+	defer logc.Error(ctx, "MQ consumer stopped")
 
 	for {
 		select {
 		case <-ctx.Done():
-			logc.Info(ctx, "Context canceled, exiting consumer loop")
+			logc.Error(ctx, "Context canceled, exiting consumer loop")
 			return
 		default:
 			msg, err := c.reader.ReadMessage(ctx)
