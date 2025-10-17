@@ -11,6 +11,8 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	oteltrace "go.opentelemetry.io/otel/trace"
+	"io"
+	"math/rand"
 	"net"
 	"net/http"
 	"strconv"
@@ -89,37 +91,36 @@ func basicAuth(username, password string) string {
 
 // InitESClient 初始化 OpenSearch 客户端
 func InitESClient(conf *Config) (*Es, error) {
-	// TLS 配置
 	tlsConfig := &tls.Config{
-		MinVersion: tls.VersionTLS12,
-		// 生产环境建议关闭
-		InsecureSkipVerify: true,
+		MinVersion:         tls.VersionTLS12,
+		InsecureSkipVerify: false, // 建议生产环境关闭跳过
 	}
+
 	transport := &http.Transport{
-		TLSClientConfig: tlsConfig,
-		// 高并发时可调大
-		MaxIdleConns:        100,
-		MaxIdleConnsPerHost: 100,
-		MaxConnsPerHost:     100,
-		IdleConnTimeout:     90 * time.Second,
+		TLSClientConfig:     tlsConfig,
+		MaxIdleConns:        500,
+		MaxIdleConnsPerHost: 500,
+		MaxConnsPerHost:     1000,
+		IdleConnTimeout:     60 * time.Second,
+		DisableKeepAlives:   false,
+		TLSHandshakeTimeout: 10 * time.Second,
 		DialContext: (&net.Dialer{
 			Timeout:   5 * time.Second,
 			KeepAlive: 30 * time.Second,
 		}).DialContext,
-		TLSHandshakeTimeout: 10 * time.Second,
 	}
 
 	headers := BuildAuthHeader(conf)
 	cfg := opensearch.Config{
-		Addresses: conf.Addresses,
-		Transport: transport,
-		Header:    headers,
-
-		// 重试策略
+		Addresses:     conf.Addresses,
+		Transport:     transport,
+		Header:        headers.Clone(), // 确保线程安全
 		RetryOnStatus: []int{502, 503, 504},
 		MaxRetries:    3,
 		RetryBackoff: func(attempt int) time.Duration {
-			return time.Duration(attempt*100) * time.Millisecond
+			base := 100 * time.Millisecond
+			jitter := time.Duration(rand.Intn(100)) * time.Millisecond
+			return (1<<attempt)*base + jitter
 		},
 	}
 
@@ -128,17 +129,20 @@ func InitESClient(conf *Config) (*Es, error) {
 		return nil, fmt.Errorf("creating OpenSearch client failed: %w", err)
 	}
 
-	// 测试连接
 	res, err := client.Info()
 	if err != nil {
 		return nil, fmt.Errorf("OpenSearch ping failed: %w", err)
 	}
-	defer res.Body.Close()
+	defer func() {
+		defer res.Body.Close()
+	}()
 
-	return &Es{
-		Client: client,
-	}, nil
+	io.Copy(io.Discard, res.Body)
+	if res.IsError() {
+		return nil, fmt.Errorf("OpenSearch returned error: %s", res.String())
+	}
 
+	return &Es{Client: client}, nil
 }
 
 func MustNewEs(conf *Config) *Es {

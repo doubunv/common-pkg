@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/doubunv/common-pkg/es/esaws/core"
 	"github.com/doubunv/common-pkg/es/esaws/model"
-	"strconv"
 	"testing"
 	"time"
 )
@@ -45,30 +44,40 @@ func TestLogInfo(t *testing.T) {
 	ctx := context.Background()
 	esModel := model.NewEsModel(ctx, esClient)
 
-	//创建
-	tm := time.Now().Unix()
-	data := &MyIndexTable{_indexName: "example_index", UserId: 1759848897, Amount: 1.78, PUserId: []int64{tm, tm, tm + 2, tm + 3}, _id: strconv.FormatInt(tm, 10)}
-	err := esModel.InsertSchema(data)
-	if err != nil {
-		fmt.Println(err)
-	}
+	//for i := 1; i < 1000; i++ {
+	//	//创建
+	//	tm := time.Now().Unix()
+	//	data := &MyIndexTable{_indexName: "example_index", UserId: int64(i), Amount: 1.78, PUserId: []int64{tm, tm, tm + 2, tm + 3}, _id: strconv.Itoa(i)}
+	//	err := esModel.InsertSchema(data)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println(i)
+	//}
+
 	fmt.Println("end")
 
-	//查询单条
-	//data1 := &MyIndexTable{Name: "example_index"}
-	//err := esModel.FindOne("1111", data1)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
+	//for i := 0; i < 1000; i++ {
+	//	//查询单条
+	//	data1 := &MyIndexTable{_indexName: "example_index"}
+	//	err := esModel.FindOne("1", data1)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//	fmt.Println(data1)
 	//}
-	//fmt.Println(data1)
 
 	//修改
-	//data2 := &MyIndexTable{_indexName: "example_index", UserId: time.Now().Unix(), _id: "1111"}
-	//err := esModel.UpdateSchema(data2)
-	//if err != nil {
-	//	return
-	//}
+	for i := 0; i < 1000; i++ {
+		data2 := &MyIndexTable{_indexName: "example_index", UserId: time.Now().Unix(), _id: "1"}
+		err := esModel.UpdateSchema(data2)
+		if err != nil {
+			return
+		}
+		fmt.Println(i)
+	}
+	fmt.Println("end")
 
 	//基本查询
 	//data3 := &MyIndexTable{_indexName: "example_index", _id: "1111"}

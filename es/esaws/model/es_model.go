@@ -10,6 +10,7 @@ import (
 	"github.com/doubunv/common-pkg/es/esaws/core"
 	"github.com/elastic/go-elasticsearch/v7/esapi"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
+	"io"
 	"strings"
 )
 
@@ -74,6 +75,8 @@ func (model *EsModel) InsertSchema(data interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer response.Body.Close()
+	io.Copy(io.Discard, response.Body)
 
 	if response.IsError() {
 		return errors.New(response.String())
@@ -95,6 +98,7 @@ func (model *EsModel) FindOne(id string, res interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	err = core.ParseGetResponse(model.Ctx, &res, (*esapi.Response)(resEs))
 	if err != nil {
 		return err
@@ -114,6 +118,9 @@ func (model *EsModel) Delete(id string, res interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer resEs.Body.Close()
+	io.Copy(io.Discard, resEs.Body)
+
 	if resEs.IsError() {
 		return errors.New(resEs.String())
 	}
@@ -148,6 +155,8 @@ func (model *EsModel) UpdateSchema(data interface{}) error {
 	if err != nil {
 		return err
 	}
+	defer response.Body.Close()
+	io.Copy(io.Discard, response.Body)
 
 	if response.IsError() {
 		return errors.New(response.String())

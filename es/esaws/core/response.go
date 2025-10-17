@@ -16,6 +16,10 @@ import (
 var EsNotFound = errors.New("Es not found. ")
 
 func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response) error {
+	defer func() {
+		resEs.Body.Close()
+		io.Copy(io.Discard, resEs.Body)
+	}()
 	if resEs.StatusCode == http.StatusNotFound {
 		return nil
 	}
@@ -23,7 +27,6 @@ func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response)
 	if resEs.IsError() {
 		return errors.New(resEs.String())
 	}
-	defer resEs.Body.Close()
 
 	body, err := io.ReadAll(resEs.Body)
 	if err != nil {
