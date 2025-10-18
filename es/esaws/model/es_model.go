@@ -15,14 +15,16 @@ import (
 )
 
 type EsModel struct {
-	Ctx context.Context
-	Db  *core.Es
+	Ctx          context.Context
+	Db           *core.Es
+	BusinessCode string
 }
 
-func NewEsModel(ctx context.Context, Db *core.Es) *EsModel {
+func NewEsModel(ctx context.Context, Db *core.Es, businessCode string) *EsModel {
 	return &EsModel{
-		Ctx: ctx,
-		Db:  Db,
+		Ctx:          ctx,
+		Db:           Db,
+		BusinessCode: businessCode,
 	}
 }
 
@@ -58,7 +60,12 @@ func (model *EsModel) InsertSchema(data interface{}) error {
 	)
 
 	if str, ok := data.(esv7.IndexTable); ok {
-		indexName = str.IndexName()
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = model.BusinessCode + "_" + str.IndexName()
+		}
+
 	}
 	if str, ok := data.(esv7.Schema); ok {
 		idKey = str.GetId()
@@ -91,7 +98,11 @@ func (model *EsModel) FindOne(id string, res interface{}) error {
 	)
 
 	if str, ok := res.(esv7.IndexTable); ok {
-		indexName = str.IndexName()
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = model.BusinessCode + "_" + str.IndexName()
+		}
 	}
 
 	resEs, err := model.GetDb().Get(indexName, id)
@@ -111,7 +122,11 @@ func (model *EsModel) Delete(id string, res interface{}) error {
 		indexName string
 	)
 	if str, ok := res.(esv7.IndexTable); ok {
-		indexName = str.IndexName()
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = model.BusinessCode + "_" + str.IndexName()
+		}
 	}
 
 	resEs, err := model.GetDb().Delete(indexName, id)
@@ -141,7 +156,11 @@ func (model *EsModel) UpdateSchema(data interface{}) error {
 	)
 
 	if str, ok := data.(esv7.IndexTable); ok {
-		indexName = str.IndexName()
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = model.BusinessCode + "_" + str.IndexName()
+		}
 	}
 	if str, ok := data.(esv7.Schema); ok {
 		idKey = str.GetId()
@@ -171,7 +190,11 @@ func (model *EsModel) Search(res interface{}, res2 interface{}, query map[string
 	)
 
 	if str, ok := res.(esv7.IndexTable); ok {
-		indexName = str.IndexName()
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = model.BusinessCode + "_" + str.IndexName()
+		}
 	}
 
 	querydata, err := json.Marshal(query)

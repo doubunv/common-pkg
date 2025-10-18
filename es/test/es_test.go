@@ -42,7 +42,7 @@ func TestLogInfo(t *testing.T) {
 		MaxRetries: 3,
 	})
 	ctx := context.Background()
-	esModel := model.NewEsModel(ctx, esClient)
+	esModel := model.NewEsModel(ctx, esClient, "")
 
 	//for i := 1; i < 1000; i++ {
 	//	//创建
@@ -73,6 +73,7 @@ func TestLogInfo(t *testing.T) {
 		data2 := &MyIndexTable{_indexName: "example_index", UserId: time.Now().Unix(), _id: "1"}
 		err := esModel.UpdateSchema(data2)
 		if err != nil {
+			fmt.Println(err)
 			return
 		}
 		fmt.Println(i)
