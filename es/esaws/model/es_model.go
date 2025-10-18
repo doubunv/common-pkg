@@ -63,7 +63,7 @@ func (model *EsModel) InsertSchema(data interface{}) error {
 		if model.BusinessCode == "" {
 			indexName = str.IndexName()
 		} else {
-			indexName = model.BusinessCode + "_" + str.IndexName()
+			indexName = str.IndexName() + "_" + model.BusinessCode
 		}
 
 	}
@@ -101,7 +101,7 @@ func (model *EsModel) FindOne(id string, res interface{}) error {
 		if model.BusinessCode == "" {
 			indexName = str.IndexName()
 		} else {
-			indexName = model.BusinessCode + "_" + str.IndexName()
+			indexName = str.IndexName() + "_" + model.BusinessCode
 		}
 	}
 
@@ -125,7 +125,7 @@ func (model *EsModel) Delete(id string, res interface{}) error {
 		if model.BusinessCode == "" {
 			indexName = str.IndexName()
 		} else {
-			indexName = model.BusinessCode + "_" + str.IndexName()
+			indexName = str.IndexName() + "_" + model.BusinessCode
 		}
 	}
 
@@ -159,7 +159,7 @@ func (model *EsModel) UpdateSchema(data interface{}) error {
 		if model.BusinessCode == "" {
 			indexName = str.IndexName()
 		} else {
-			indexName = model.BusinessCode + "_" + str.IndexName()
+			indexName = str.IndexName() + "_" + model.BusinessCode
 		}
 	}
 	if str, ok := data.(esv7.Schema); ok {
@@ -193,7 +193,7 @@ func (model *EsModel) Search(res interface{}, res2 interface{}, query map[string
 		if model.BusinessCode == "" {
 			indexName = str.IndexName()
 		} else {
-			indexName = model.BusinessCode + "_" + str.IndexName()
+			indexName = str.IndexName() + "_" + model.BusinessCode
 		}
 	}
 
