@@ -13,9 +13,7 @@ import (
 type MyIndexTable struct {
 	_indexName string
 	_id        string
-	UserId     int64   `json:"user_id"`
-	PUserId    []int64 `json:"p_user_id"`
-	Amount     float64 `json:"amount"` //es在做map映射的时候需要用double，不然会有精度丢失
+	Timestamp  int64 `json:"@timestamp"`
 }
 
 // 实现 IndexName 方法
@@ -42,16 +40,16 @@ func TestLogInfo(t *testing.T) {
 		MaxRetries: 3,
 	})
 	ctx := context.Background()
-	esModel := model.NewEsModel(ctx, esClient, "")
+	esModel := model.NewEsModel(ctx, esClient, "10003001")
 
 	//for i := 1; i < 1000; i++ {
 	//	//创建
-	//	tm := time.Now().Unix()
-	//	data := &MyIndexTable{_indexName: "example_index", UserId: int64(i), Amount: 1.78, PUserId: []int64{tm, tm, tm + 2, tm + 3}, _id: strconv.Itoa(i)}
-	//	err := esModel.InsertSchema(data)
-	//	if err != nil {
-	//		fmt.Println(err)
-	//	}
+	tm := time.Now().Unix()
+	data := &MyIndexTable{_indexName: "game_log", Timestamp: tm * 1000}
+	err := esModel.InsertSchema(data)
+	if err != nil {
+		fmt.Println(err)
+	}
 	//	fmt.Println(i)
 	//}
 
@@ -68,17 +66,17 @@ func TestLogInfo(t *testing.T) {
 	//	fmt.Println(data1)
 	//}
 
-	//修改
-	for i := 0; i < 1000; i++ {
-		data2 := &MyIndexTable{_indexName: "example_index", UserId: time.Now().Unix(), _id: "1"}
-		err := esModel.UpdateSchema(data2)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(i)
-	}
-	fmt.Println("end")
+	////修改
+	//for i := 0; i < 1000; i++ {
+	//	data2 := &MyIndexTable{_indexName: "example_index", UserId: time.Now().Unix(), _id: "1"}
+	//	err := esModel.UpdateSchema(data2)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//		return
+	//	}
+	//	fmt.Println(i)
+	//}
+	//fmt.Println("end")
 
 	//基本查询
 	//data3 := &MyIndexTable{_indexName: "example_index", _id: "1111"}

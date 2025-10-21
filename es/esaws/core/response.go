@@ -14,6 +14,7 @@ import (
 )
 
 var EsNotFound = errors.New("Es not found. ")
+var Es500Err = errors.New("Es service 500 error. ")
 
 func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response) error {
 	defer func() {
@@ -22,6 +23,9 @@ func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response)
 	}()
 	if resEs.StatusCode == http.StatusNotFound {
 		return nil
+	}
+	if resEs.StatusCode == http.StatusInternalServerError {
+		return Es500Err
 	}
 
 	if resEs.IsError() {
@@ -52,6 +56,9 @@ func ParseGetResponse(ctx context.Context, v interface{}, resEs *esapi.Response)
 func ParseSearchResponse(ctx context.Context, v interface{}, resEs *esapi.Response) (total int64, aggregate map[string]types.Aggregate, err error) {
 	if resEs.StatusCode == http.StatusNotFound {
 		return 0, nil, EsNotFound
+	}
+	if resEs.StatusCode == http.StatusInternalServerError {
+		return 0, nil, Es500Err
 	}
 
 	if resEs.IsError() {

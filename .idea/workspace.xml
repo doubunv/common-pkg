@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8e6fa6-9d1f-4688-9e31-5a1b56071e33" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/es/esaws/model/es_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/es/esaws/model/es_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es/esaws/core/response.go" beforeDir="false" afterPath="$PROJECT_DIR$/es/esaws/core/response.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es/test/es_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/es/test/es_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +94,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/es/test/es_test.go</url>
-          <line>151</line>
+          <line>149</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
