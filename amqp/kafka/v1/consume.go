@@ -80,10 +80,11 @@ func (c *Consumer) handleMessage(ctx context.Context, handler MessageHandle, msg
 
 	msgCtx := ka.SetContext(ctx)
 
+	var err error
 	const maxRetries = 3
 	delay := time.Second
 	for i := 1; i <= maxRetries; i++ {
-		if err := handler(msgCtx, ka.GetMsg()); err != nil {
+		if err = handler(msgCtx, ka.GetMsg()); err != nil {
 			logc.Infof(msgCtx, "Handle message error (try %d/%d): %v", i, maxRetries, err)
 			time.Sleep(delay)
 			delay *= 2
@@ -92,7 +93,7 @@ func (c *Consumer) handleMessage(ctx context.Context, handler MessageHandle, msg
 		return
 	}
 
-	logc.Errorf(msgCtx, "Message failed after retries, send to DLQ: %s", string(msg.Value))
+	logc.Errorf(msgCtx, "Message failed after retries, send to DLQ: %s,ERROR:%s", string(msg.Value), err.Error())
 	// c.sendDeadLetterQueue(msgCtx, msg.Topic, ka)
 }
 
