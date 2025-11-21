@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8e6fa6-9d1f-4688-9e31-5a1b56071e33" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/rpcClient.go" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/rpcClient.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commonTool/tool.go" beforeDir="false" afterPath="$PROJECT_DIR$/commonTool/tool.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/consts/system.go" beforeDir="false" afterPath="$PROJECT_DIR$/consts/system.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +51,7 @@
     &quot;git-widget-placeholder&quot;: &quot;pre&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/Zhuanz2/www/common-pkg/es/test&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/Zhuanz2/www/common-pkg/commonTool&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
@@ -57,12 +60,12 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/es/test" />
       <recent name="$PROJECT_DIR$/commonTool" />
+      <recent name="$PROJECT_DIR$/es/test" />
       <recent name="$PROJECT_DIR$/es" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool">
     <configuration name="TestLogInfo in github.com/doubunv/common-pkg/es/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="common-pkg" />
       <working_directory value="$PROJECT_DIR$/es/test" />
@@ -75,8 +78,21 @@
       <pattern value="^\QTestLogInfo\E$" />
       <method v="2" />
     </configuration>
+    <configuration name="Test_Comsume in github.com/doubunv/common-pkg/commonTool" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="common-pkg" />
+      <working_directory value="$PROJECT_DIR$/commonTool" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/doubunv/common-pkg/commonTool" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTest_Comsume\E$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool" />
         <item itemvalue="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test" />
       </list>
     </recent_temporary>

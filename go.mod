@@ -14,6 +14,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/sirupsen/logrus v1.9.3
+	github.com/spf13/cast v1.10.0
 	github.com/xxl-job/xxl-job-executor-go v1.2.0
 	github.com/zeromicro/go-zero v1.7.4
 	go.opentelemetry.io/otel v1.33.0

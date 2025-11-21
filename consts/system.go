@@ -19,8 +19,8 @@ const (
 
 const (
 	APP     = "app"
-	IOS     = "ios"
-	Android = "android"
+	IOS     = "IOS"
+	Android = "Android"
 	PC      = "pc"
 	H5      = "h5"
 )
