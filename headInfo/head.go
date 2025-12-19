@@ -18,7 +18,7 @@ const PLATFORM_BUSINESS_CODE = "99999999"
 type Head struct {
 	AuthorizationJwt string `json:"authorization_jwt"` // 用户token
 	Version          string `json:"version"`           // APP版本
-	Source           string `json:"source"`            // 来源渠道	* Android * Ios * Pc
+	Source           string `json:"source"`            // 来源渠道
 	ClientIp         string `json:"client_ip"`         // 客户端IP
 	Trace            string `json:"trace"`             // 链路路由
 	TokenUid         string `json:"token_uid"`         // 用户ID
@@ -29,6 +29,7 @@ type Head struct {
 	TokenUidRole     string `json:"token_uid_role"`
 	ReqOrigin        string `json:"req_origin"` // 请求地址
 	Timezone         string `json:"timezone"`
+	UserAgent        string `json:"user_agent"`
 }
 
 func GetHead(r *http.Request) *Head {
@@ -47,6 +48,7 @@ func GetHead(r *http.Request) *Head {
 		TokenUidRole:     "",
 		ReqOrigin:        strings.Trim(header.Get("Origin"), " "),
 		Timezone:         strings.Trim(header.Get(consts.Timezone), " "),
+		UserAgent:        strings.Trim(header.Get("user-agent"), ""),
 	}
 }
 
@@ -74,6 +76,7 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 		logx.Field(consts.TokenUidRole, h.TokenUidRole),
 		logx.Field(consts.OriginUrl, h.ReqOrigin),
 		logx.Field(consts.Timezone, h.Timezone),
+		logx.Field(consts.UserAgent, h.UserAgent),
 	)
 	return ctxNew
 }
@@ -116,6 +119,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.TokenUidRole, h.TokenUidRole,
 		consts.OriginUrl, h.ReqOrigin,
 		consts.Timezone, h.Timezone,
+		consts.UserAgent, h.UserAgent,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)
