@@ -34,9 +34,9 @@ func (m *MyIndexTable) SetId(id string) {
 func TestLogInfo(t *testing.T) {
 
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{"https://search-es-usdt-db-dev-fp3bbysw7vfmnn6u7segtwqxpa.aos.ap-southeast-1.on.aws"},
-		Username:   "admin",
-		Password:   "Dev123456.",
+		Addresses:  []string{"xxx"},
+		Username:   "xxx",
+		Password:   "xxxx.",
 		MaxRetries: 3,
 	})
 	ctx := context.Background()
