@@ -6,6 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/logc"
 	"google.golang.org/grpc/status"
 	"net/http"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/trace"
 	"go.opentelemetry.io/otel"
@@ -36,9 +37,11 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 			Reply:   reply,
 			Method:  method,
 		}
+
+		time1 := time.Now().UnixMicro()
 		err := invoker(ctx, method, req, reply, cc, opts...)
+		logc.Infof(ctx, "ClientInterceptor: %s run time %d micro", method, time.Now().UnixMicro()-time1)
 		if err == nil {
-			logc.Infof(ctx, "%+v", msg)
 			return nil
 		}
 		msg.Err = err.Error()
