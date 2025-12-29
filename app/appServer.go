@@ -23,11 +23,11 @@ func InitAppServer() {
 }
 
 type RedisConf struct {
-	Addr               string
-	Username           string
-	Password           string
-	DB                 int
-	InsecureSkipVerify bool
+	Addr               string `json:",optional"`
+	Username           string `json:",optional"`
+	Password           string `json:",optional"`
+	DB                 int    `json:",optional"`
+	InsecureSkipVerify bool   `json:",optional"`
 }
 
 type ConfigAppServer struct {
