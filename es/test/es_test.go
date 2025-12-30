@@ -44,7 +44,7 @@ func indexS(model *model.EsModel) {
 func TestLogInfo(t *testing.T) {
 
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{""},
+		Addresses:  []string{"https://search-es-usdt-db-dev-fp3bbysw7vfmnn6u7segtwqxpa.aos.ap-southeast-1.on.aws"},
 		Username:   "admin",
 		Password:   "Dev123456.",
 		MaxRetries: 3,

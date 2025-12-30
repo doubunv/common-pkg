@@ -40,7 +40,12 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 
 		time1 := time.Now().UnixMicro()
 		err := invoker(ctx, method, req, reply, cc, opts...)
-		logc.Infof(ctx, "ClientInterceptor: %s run time %d micro", method, time.Now().UnixMicro()-time1)
+
+		msgTx := "success"
+		if err != nil {
+			msgTx = err.Error()
+		}
+		logc.Infof(ctx, "ClientInterceptor: %s run time %d micro, err=%s", method, time.Now().UnixMicro()-time1, msgTx)
 		if err == nil {
 			return nil
 		}
