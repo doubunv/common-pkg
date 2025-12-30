@@ -26,9 +26,10 @@ func MySqlConnectV2(conf string, logLevel int) *gorm.DB {
 		panic("mysql connect err," + conf + "," + err.Error())
 	}
 
-	sqlDB.SetMaxIdleConns(5)
-	sqlDB.SetMaxOpenConns(20)
-	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(80) // 起步值，按实例数/DB上限再调
+	sqlDB.SetConnMaxLifetime(30 * time.Minute)
+	sqlDB.SetConnMaxIdleTime(10 * time.Minute)
 
 	logx.Info("mysql connect success")
 	return res
