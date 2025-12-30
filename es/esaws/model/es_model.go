@@ -225,7 +225,6 @@ func (model *EsModel) IndexSchema(data interface{}) error {
 		return err
 	}
 
-	dataJson = []byte("{\"doc\":" + string(dataJson) + "}")
 	var (
 		indexName string
 		idKey     string

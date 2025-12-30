@@ -44,13 +44,13 @@ func indexS(model *model.EsModel) {
 func TestLogInfo(t *testing.T) {
 
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{"xxxx"},
+		Addresses:  []string{""},
 		Username:   "admin",
 		Password:   "Dev123456.",
 		MaxRetries: 3,
 	})
 	ctx := context.Background()
-	esModel := model.NewEsModel(ctx, esClient, "10003001")
+	esModel := model.NewEsModel(ctx, esClient, "10003002")
 
 	indexS(esModel)
 	return
