@@ -14,6 +14,8 @@ type MyIndexTable struct {
 	_indexName string
 	_id        string
 	Timestamp  int64 `json:"@timestamp"`
+	UserName   string
+	Age        int
 }
 
 // 实现 IndexName 方法
@@ -31,21 +33,32 @@ func (m *MyIndexTable) SetId(id string) {
 	m._id = id
 }
 
+func indexS(model *model.EsModel) {
+	data := &MyIndexTable{_indexName: "test_log", _id: "2", Age: 123}
+	err := model.IndexSchema(data)
+	if err != nil {
+		return
+	}
+}
+
 func TestLogInfo(t *testing.T) {
 
 	esClient := core.MustNewEs(&core.Config{
-		Addresses:  []string{"xxx"},
-		Username:   "xxx",
-		Password:   "xxxx.",
+		Addresses:  []string{"xxxx"},
+		Username:   "admin",
+		Password:   "Dev123456.",
 		MaxRetries: 3,
 	})
 	ctx := context.Background()
 	esModel := model.NewEsModel(ctx, esClient, "10003001")
 
+	indexS(esModel)
+	return
+
 	//for i := 1; i < 1000; i++ {
 	//	//创建
 	tm := time.Now().Unix()
-	data := &MyIndexTable{_indexName: "game_log", Timestamp: tm * 1000}
+	data := &MyIndexTable{_indexName: "test_log", _id: "1", Timestamp: tm * 1000, UserName: "123", Age: 123}
 	err := esModel.InsertSchema(data)
 	if err != nil {
 		fmt.Println(err)

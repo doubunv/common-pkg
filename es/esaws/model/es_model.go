@@ -217,3 +217,55 @@ func (model *EsModel) Search(res interface{}, res2 interface{}, query map[string
 
 	return (*esapi.Response)(resEs), total, aggregate, err
 }
+
+// 会强制覆盖所有的字段,如果不存在则会插入新数据
+func (model *EsModel) IndexSchema(data interface{}) error {
+	dataJson, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	dataJson = []byte("{\"doc\":" + string(dataJson) + "}")
+	var (
+		indexName string
+		idKey     string
+	)
+
+	if str, ok := data.(esv7.IndexTable); ok {
+		if model.BusinessCode == "" {
+			indexName = str.IndexName()
+		} else {
+			indexName = str.IndexName() + "_" + model.BusinessCode
+		}
+	}
+	if str, ok := data.(esv7.Schema); ok {
+		idKey = str.GetId()
+	}
+
+	if indexName == "" || idKey == "" {
+		return errors.New("Not IndexTable or Schema. ")
+	}
+
+	// 创建 Index 请求
+	req := esapi.IndexRequest{
+		Index:      indexName,
+		DocumentID: idKey,
+		Body:       bytes.NewBuffer(dataJson),
+		Refresh:    "true", // 可选，立即刷新索引，使文档可搜索
+	}
+
+	// 执行请求
+	response, err := req.Do(context.Background(), model.GetDb().Client)
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+	io.Copy(io.Discard, response.Body)
+
+	if response.IsError() {
+		return errors.New(response.String())
+	}
+
+	return nil
+}

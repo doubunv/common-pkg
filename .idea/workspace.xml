@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8e6fa6-9d1f-4688-9e31-5a1b56071e33" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/appServer.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/appServer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es/esaws/model/es_model.go" beforeDir="false" afterPath="$PROJECT_DIR$/es/esaws/model/es_model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/es/test/es_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/es/test/es_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +63,7 @@
       <recent name="$PROJECT_DIR$/es" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool">
+  <component name="RunManager" selected="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test">
     <configuration name="TestLogInfo in github.com/doubunv/common-pkg/es/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="common-pkg" />
       <working_directory value="$PROJECT_DIR$/es/test" />
@@ -89,8 +90,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool" />
         <item itemvalue="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test" />
+        <item itemvalue="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool" />
       </list>
     </recent_temporary>
   </component>
@@ -100,16 +101,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/es/test/es_test.go</url>
-          <line>149</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
