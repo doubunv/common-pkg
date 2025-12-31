@@ -45,7 +45,7 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 		if err != nil {
 			msgTx = err.Error()
 		}
-		logc.Infof(ctx, "ClientInterceptor:rpcName=%s method=%s, runtime=%d micro, err=%s", rpcName, method, time.Now().UnixMicro()-time1, msgTx)
+		logc.Infof(ctx, "ClientInterceptor: rpcName=%s method=%s, runtime=%d micro, err=%s", rpcName, method, time.Now().UnixMicro()-time1, msgTx)
 		if err == nil {
 			return nil
 		}

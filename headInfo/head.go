@@ -39,7 +39,7 @@ func GetHead(r *http.Request) *Head {
 		Version:          strings.Trim(header.Get(consts.Version), " "),
 		Source:           strings.Trim(header.Get(consts.Source), " "),
 		ClientIp:         getClientIP(r),
-		Trace:            trace.SpanContextFromContext(r.Context()).TraceID().String(),
+		Trace:            getTraceId(r),
 		ReqPath:          r.URL.Path,
 		Business:         strings.Trim(header.Get(consts.Business), " "),
 		BusinessCode:     strings.Trim(header.Get(consts.BusinessCode), " "),
@@ -81,6 +81,17 @@ func ContextHeadInLog(ctx context.Context, h *Head) context.Context {
 	return ctxNew
 }
 
+func getTraceId(r *http.Request) string {
+	traceId := r.Header.Get("X-Request-ID")
+	if traceId == "" {
+		traceId = strings.Trim(r.Header.Get(consts.RequestId), " ")
+	}
+	if traceId == "" {
+		traceId = trace.SpanContextFromContext(r.Context()).TraceID().String()
+	}
+	return traceId
+}
+
 func getClientIP(r *http.Request) string {
 	ip := r.Header.Get("X-Forwarded-For")
 	if ip != "" {
@@ -120,6 +131,7 @@ func HeadInMetadata(ctx context.Context, h Head) context.Context {
 		consts.OriginUrl, h.ReqOrigin,
 		consts.Timezone, h.Timezone,
 		consts.UserAgent, h.UserAgent,
+		consts.Trace, h.Trace,
 	)
 
 	ctxNew := metadata.NewOutgoingContext(ctx, md)

@@ -15,6 +15,7 @@ const (
 	ContentLanguage = "content_language"
 	OriginUrl       = "origin_url"
 	Timezone        = "timezone"
+	RequestId       = "request_id"
 )
 
 const (
