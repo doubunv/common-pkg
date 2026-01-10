@@ -19,8 +19,10 @@ type Config struct {
 func MustNewClient(conf Config) zrpc.Client {
 	return zrpc.MustNewClient(
 		zrpc.RpcClientConf{
-			Timeout: 10000, //10s
-			Target:  GenRpcTarget(conf.Host),
+			Timeout:       10000, //10s
+			Target:        GenRpcTarget(conf.Host),
+			NonBlock:      true,
+			KeepaliveTime: 30000,
 		},
 		zrpc.WithUnaryClientInterceptor(interceptors.ClientInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
@@ -30,8 +32,10 @@ func MustNewClient(conf Config) zrpc.Client {
 func NewClient(conf Config) (zrpc.Client, error) {
 	return zrpc.NewClient(
 		zrpc.RpcClientConf{
-			Timeout: 10000, //10s
-			Target:  GenRpcTarget(conf.Host),
+			Timeout:       10000, //10s
+			Target:        GenRpcTarget(conf.Host),
+			NonBlock:      true,
+			KeepaliveTime: 30000,
 		},
 		zrpc.WithUnaryClientInterceptor(interceptors.ClientInterceptor(conf.RpcName)),
 		zrpc.WithDialOption(interceptors.RetryDialOption()),
