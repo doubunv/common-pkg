@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8e6fa6-9d1f-4688-9e31-5a1b56071e33" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpc/rpcClient.go" beforeDir="false" afterPath="$PROJECT_DIR$/rpc/rpcClient.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commonTool/v1_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/commonTool/v1_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +62,7 @@
       <recent name="$PROJECT_DIR$/es" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test">
+  <component name="RunManager" selected="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool">
     <configuration name="TestLogInfo in github.com/doubunv/common-pkg/es/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="common-pkg" />
       <working_directory value="$PROJECT_DIR$/es/test" />
@@ -89,8 +89,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test" />
         <item itemvalue="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool" />
+        <item itemvalue="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test" />
       </list>
     </recent_temporary>
   </component>
