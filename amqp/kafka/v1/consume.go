@@ -99,8 +99,8 @@ func (c *Consumer) handleMessage(ctx context.Context, handler MessageHandle, msg
 
 func (c *Consumer) ConsumeMessagesWithContext(ctx context.Context, handler MessageHandle) {
 	defer logc.Error(ctx, "MQ consumer stopped")
-	const workerCount = 100
-	msgCh := make(chan kafka.Message, 100)
+	const workerCount = 2000
+	msgCh := make(chan kafka.Message, 2000)
 
 	for i := 0; i < workerCount; i++ {
 		go func() {
