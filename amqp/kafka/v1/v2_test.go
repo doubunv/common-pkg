@@ -1,4 +1,4 @@
-package v2
+package v1
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func Test_Comsume(t *testing.T) {
 	consumer := NewConsumer(cf)
 
 	//返回 nil 代表消费成功
-	go consumer.Consume(ctx, func(ctx context.Context, msg string) error {
+	go consumer.ConsumeMessagesWithContext(ctx, func(ctx context.Context, msg string) error {
 		//log.Printf("consume msg: %s\n", msg)
 
 		// 模拟失败
