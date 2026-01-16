@@ -36,7 +36,11 @@ func (p *Producer) Close() error {
 
 func (p *Producer) ProduceMessageWithContext(ctx context.Context, message *KafkaMessage) error {
 	logc.Info(ctx, fmt.Sprintf("--- kafka:ProduceMessage: topic:%s, Message:%s", p.config.Topic, string(message.PacketMsg(p.config.Topic).Value)))
-	err := p.Writer.WriteMessages(ctx, message.PacketMsg(p.config.Topic))
+	key := message.Head.TokenUid
+	if key == "" {
+		key = message.Head.BusinessCode
+	}
+	err := p.Writer.WriteMessages(ctx, message.PacketMsg(message.Head.TokenUid))
 	if err != nil {
 		logc.Error(ctx, fmt.Sprintf("--- kafka:ProduceMessageWithContext: topic:%s, Message:%s", p.config.Topic, string(message.PacketMsg(p.config.Topic).Value)), err)
 		return err
