@@ -40,7 +40,10 @@ func (p *Producer) ProduceMessageWithContext(ctx context.Context, message *Kafka
 	if key == "" {
 		key = message.Head.BusinessCode
 	}
-	err := p.Writer.WriteMessages(ctx, message.PacketMsg(message.Head.TokenUid))
+	if key == "" {
+		key = p.config.Topic
+	}
+	err := p.Writer.WriteMessages(ctx, message.PacketMsg(key))
 	if err != nil {
 		logc.Error(ctx, fmt.Sprintf("--- kafka:ProduceMessageWithContext: topic:%s, Message:%s", p.config.Topic, string(message.PacketMsg(p.config.Topic).Value)), err)
 		return err
