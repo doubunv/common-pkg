@@ -81,11 +81,10 @@ func (c *Consumer) handleMessage(ctx context.Context, handler MessageHandle, msg
 	msgCtx := ka.SetContext(ctx)
 
 	var err error
-	const maxRetries = 3
+	const maxRetries = 15
 	delay := time.Second
 	for i := 1; i <= maxRetries; i++ {
 		if err = handler(msgCtx, ka.GetMsg()); err != nil {
-			logc.Infof(msgCtx, "Handle message error (try %d/%d): %v", i, maxRetries, err)
 			time.Sleep(delay)
 			delay *= 2
 			continue
