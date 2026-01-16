@@ -22,7 +22,7 @@ func newPartitionWorker(partition int, reader *kafka.Reader, maxRetry int, handl
 
 	return &partitionWorker{
 		partition: partition,
-		ch:        make(chan kafka.Message, 100),
+		ch:        make(chan kafka.Message, 50),
 		reader:    reader,
 		maxRetry:  maxRetry,
 		handler:   handler,
@@ -53,7 +53,6 @@ func (w *partitionWorker) process(ctx context.Context, msg kafka.Message) {
 
 	var km KafkaMessage
 	if err := json.Unmarshal(msg.Value, &km); err != nil {
-		log.Printf("unmarshal error: %v\n", err)
 		_ = w.reader.CommitMessages(ctx, msg)
 		return
 	}
