@@ -26,6 +26,7 @@ func NewConsumer(conf config.CustomerConfig) *Consumer {
 		GroupID:     conf.GroupID,
 		Topic:       conf.Topic,
 		StartOffset: conf.StartOffset,
+		Partition:   conf.Partition,
 	}
 	reader := kafka.NewReader(kafkaConf)
 	return &Consumer{
