@@ -18,7 +18,7 @@ type CustomerConfig struct {
 	GroupID     string
 	GroupTopics []string
 	StartOffset int64 `json:"StartOffset,default=-1"` //LastOffset  int64 = -1  or FirstOffset int64 = -2
-	Partition   int
+	Partition   int   `json:"partition,default=10"`
 }
 
 type ProviderConfig struct {
