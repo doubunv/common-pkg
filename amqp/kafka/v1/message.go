@@ -6,6 +6,7 @@ import (
 	"github.com/doubunv/common-pkg/headInfo"
 	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc/metadata"
+	"time"
 )
 
 type KafkaMessage struct {
@@ -39,6 +40,7 @@ func (k *KafkaMessage) PacketMsg(key string) kafka.Message {
 	return kafka.Message{
 		Value: val,
 		Key:   []byte(key),
+		Time:  time.Now(),
 	}
 }
 
