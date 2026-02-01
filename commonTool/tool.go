@@ -1,10 +1,13 @@
 package commonTool
 
 import (
+	"context"
 	"crypto"
 	"encoding/hex"
 	"fmt"
 	uuid "github.com/satori/go.uuid"
+	"github.com/shopspring/decimal"
+	"github.com/spf13/cast"
 	"math/rand"
 	"time"
 )
@@ -91,4 +94,16 @@ func GetXZeroTodayTimeInt(X int) string {
 	zeroTodayTime := zeroHour.Unix()
 
 	return time.Unix(zeroTodayTime, 0).Format("2006-01-02")
+}
+
+// 浮点数保留多少位
+func FloorAmountNum(ctx context.Context, amount float64, len int) float64 {
+	if len < 0 {
+		len = 0
+	}
+	d := decimal.NewFromFloat(amount)
+	factor := decimal.NewFromInt(1).Shift(int32(len)) // 10^len
+	d = d.Mul(factor).Floor().Div(factor)
+	// 固定保留 len 位（避免 1.2 变成 1.199999）
+	return cast.ToFloat64(d.StringFixed(int32(len)))
 }

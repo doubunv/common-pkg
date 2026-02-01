@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/doubunv/common-pkg/es/esaws/core"
 	"github.com/doubunv/common-pkg/es/esaws/model"
+	"strings"
 	"testing"
 	"time"
 )
@@ -52,8 +53,8 @@ func TestLogInfo(t *testing.T) {
 	ctx := context.Background()
 	esModel := model.NewEsModel(ctx, esClient, "10003002")
 
-	indexS(esModel)
-	return
+	//indexS(esModel)
+	//return
 
 	//for i := 1; i < 1000; i++ {
 	//	//创建
@@ -61,7 +62,10 @@ func TestLogInfo(t *testing.T) {
 	data := &MyIndexTable{_indexName: "test_log", _id: "1", Timestamp: tm * 1000, UserName: "123", Age: 123}
 	err := esModel.InsertSchema(data)
 	if err != nil {
-		fmt.Println(err)
+		if strings.Contains(err.Error(), "409 Conflict") {
+			fmt.Println(err)
+		}
+		fmt.Println(err.Error())
 	}
 	//	fmt.Println(i)
 	//}
