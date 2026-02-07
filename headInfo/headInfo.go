@@ -171,3 +171,12 @@ func GetTimezone(ctx context.Context) string {
 	res := strings.Join(md.Get(consts.Timezone), "")
 	return res
 }
+
+func GetDeviceId(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.DeviceId), "")
+	return res
+}

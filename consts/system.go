@@ -16,6 +16,7 @@ const (
 	OriginUrl       = "origin_url"
 	Timezone        = "timezone"
 	RequestId       = "request_id"
+	DeviceId        = "device_id"
 )
 
 const (
