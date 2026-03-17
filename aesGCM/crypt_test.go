@@ -117,3 +117,14 @@ func TestEncryptSame(t *testing.T) {
 		return
 	}
 }
+
+func TestEncrypt001(t *testing.T) {
+	key := []byte("key396kjjfkdsflahdf9829uihha62hu")
+	enStr1 := "k6TF5SVc6okVU-zORoIByUerZOcp9vRjEufFBoR0D_rxCzi2NywMir6ECgpFqI79mZb-Ldnz5_Ks3EWtXQ6OYzVGMfh4WI0qLuWs_nCPfQx9yFGcYkY5t_wYm6YejWQsVL72UWulHPqp_JMU5K9SIS8XJZiaroaP96DtumgCRPhWTl_Hp9syu-7nmxph3ufcSyM9TwSPZ8Jljxlzi9MSMKWKCTfstDXX3iAkNMW3XUyOC_UX6LNMsF3KBL_NDM7YQvrbSrKK-faASR1x2BhXLUeIrJolqGalsZMuabkDAaLwAqLaeXpc5M2EwzG9vn1t5inyuOIqzjeswzKiuN7kjN4-jSu7eqBQtNc1zz_YYiW6v-j3tE0jySpOydlSB1TFQpyOitXUyK4EJH8UTjOc89-YWJCOdLtVqhfCTGyW-uMX4XEphAul1O9_FCEVnk0cfc9HNq4eqHkBc3V6NO2IX186UxaTNw0mEejkoF0"
+	dStr, err := Decrypt(key, enStr1)
+	if err != nil {
+		t.Error("Decrypt err:", err.Error())
+		return
+	}
+	fmt.Println(string(dStr))
+}

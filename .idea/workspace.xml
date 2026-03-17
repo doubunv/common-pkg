@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="7a8e6fa6-9d1f-4688-9e31-5a1b56071e33" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/consts/system.go" beforeDir="false" afterPath="$PROJECT_DIR$/consts/system.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/headInfo/head.go" beforeDir="false" afterPath="$PROJECT_DIR$/headInfo/head.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/headInfo/headInfo.go" beforeDir="false" afterPath="$PROJECT_DIR$/headInfo/headInfo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aesGCM/crypt_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/aesGCM/crypt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amqp/kafka/v1/worker.go" beforeDir="false" afterPath="$PROJECT_DIR$/amqp/kafka/v1/worker.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +70,31 @@
       <recent name="$PROJECT_DIR$/amqp/kafka/v2" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test">
+  <component name="RunManager" selected="Go Test.TestEncrypt001 in github.com/doubunv/common-pkg/aesGCM">
+    <configuration name="TestEncrypt in github.com/doubunv/common-pkg/aesGCM" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="common-pkg" />
+      <working_directory value="$PROJECT_DIR$/aesGCM" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/doubunv/common-pkg/aesGCM" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestEncrypt\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestEncrypt001 in github.com/doubunv/common-pkg/aesGCM" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="common-pkg" />
+      <working_directory value="$PROJECT_DIR$/aesGCM" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/doubunv/common-pkg/aesGCM" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestEncrypt001\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestLogInfo in github.com/doubunv/common-pkg/es/test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="common-pkg" />
       <working_directory value="$PROJECT_DIR$/es/test" />
@@ -96,6 +121,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestEncrypt001 in github.com/doubunv/common-pkg/aesGCM" />
+        <item itemvalue="Go Test.TestEncrypt in github.com/doubunv/common-pkg/aesGCM" />
         <item itemvalue="Go Test.TestLogInfo in github.com/doubunv/common-pkg/es/test" />
         <item itemvalue="Go Test.Test_Comsume in github.com/doubunv/common-pkg/commonTool" />
       </list>
@@ -107,5 +134,21 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/aesGCM/crypt_test.go</url>
+          <line>36</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/aesGCM/crypt_test.go</url>
+          <line>128</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -64,6 +64,8 @@ func (w *partitionWorker) process(ctx context.Context, msg kafka.Message) {
 		if err = w.handler(msgCtx, km.GetMsg()); err == nil {
 			_ = w.reader.CommitMessages(ctx, msg)
 			return
+		} else {
+			logc.Error(ctx, err)
 		}
 		time.Sleep(time.Duration(i) * time.Second)
 	}
