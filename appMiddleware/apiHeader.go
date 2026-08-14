@@ -80,7 +80,7 @@ func (m *ApiHeaderMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		if err != nil {
 			return
 		}
-		logc.Info(newCtx, "ApiRequest:"+string(body))
+		//logc.Info(newCtx, "ApiRequest:"+string(body))
 		newReq.Body = io.NopCloser(bytes.NewBuffer(body))
 
 		next(w, newReq)

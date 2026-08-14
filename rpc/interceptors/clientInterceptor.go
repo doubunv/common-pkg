@@ -3,15 +3,12 @@ package interceptors
 import (
 	"context"
 	"github.com/doubunv/common-pkg/result/xcode"
-	"github.com/zeromicro/go-zero/core/logc"
-	"google.golang.org/grpc/status"
-	"net/http"
-	"time"
-
 	"github.com/zeromicro/go-zero/core/trace"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
+	"net/http"
 )
 
 type msgPrint struct {
@@ -38,17 +35,17 @@ func ClientInterceptor(rpcName string) grpc.UnaryClientInterceptor {
 			Method:  method,
 		}
 
-		time1 := time.Now().UnixMicro()
+		//time1 := time.Now().UnixMicro()
 		err := invoker(ctx, method, req, reply, cc, opts...)
 
-		msgTx := "success"
-		if err != nil {
-			msgTx = err.Error()
-		}
-		logc.Infof(ctx, "ClientInterceptor: rpcName=%s method=%s, runtime=%d micro, err=%s", rpcName, method, time.Now().UnixMicro()-time1, msgTx)
-		if err == nil {
-			return nil
-		}
+		//msgTx := "success"
+		//if err != nil {
+		//	msgTx = err.Error()
+		//}
+		//logc.Infof(ctx, "ClientInterceptor: rpcName=%s method=%s, runtime=%d micro, err=%s", rpcName, method, time.Now().UnixMicro()-time1, msgTx)
+		//if err == nil {
+		//	return nil
+		//}
 		msg.Err = err.Error()
 		//logc.Errorf(ctx, "%+v", msg)
 		gErr, ok := status.FromError(err)

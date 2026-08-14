@@ -180,3 +180,12 @@ func GetDeviceId(ctx context.Context) string {
 	res := strings.Join(md.Get(consts.DeviceId), "")
 	return res
 }
+
+func GetReqPath(ctx context.Context) string {
+	md, ok := metadata.FromOutgoingContext(ctx)
+	if !ok {
+		return ""
+	}
+	res := strings.Join(md.Get(consts.ReqPath), "")
+	return res
+}

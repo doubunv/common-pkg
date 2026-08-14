@@ -33,8 +33,8 @@ func interfaceToBytes(data interface{}) ([]byte, error) {
 
 func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interface{}) {
 	resp = language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
-	logSucc, _ := json.Marshal(Success(resp, trace.TraceIDFromContext(ctx)))
-	logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
+	//logSucc, _ := json.Marshal(Success(resp, trace.TraceIDFromContext(ctx)))
+	//logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
 
 	if aesGCM.IsOpenAesGcm {
 		respByte, err := interfaceToBytes(resp)
@@ -57,8 +57,8 @@ func HttpSuccessResult(ctx context.Context, w http.ResponseWriter, resp interfac
 
 func HttpSuccessResultNotAes(ctx context.Context, w http.ResponseWriter, resp interface{}) {
 	resp = language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx))
-	logSucc, _ := json.Marshal(Success(resp, trace.TraceIDFromContext(ctx)))
-	logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
+	//logSucc, _ := json.Marshal(Success(resp, trace.TraceIDFromContext(ctx)))
+	//logc.Info(ctx, "ApiResponse:", fmt.Sprintf("%s", string(logSucc)))
 	success := Success(resp, trace.TraceIDFromContext(ctx))
 	httpx.WriteJsonCtx(ctx, w, http.StatusOK, success)
 }
@@ -79,10 +79,10 @@ func HttpErrorResult(ctx context.Context, w http.ResponseWriter, err error) {
 
 	resp := Error(code, msg, trace.TraceIDFromContext(ctx))
 
-	go func() {
-		logSuc, _ := json.Marshal(resp)
-		logc.Info(ctx, "ApiResponse:", string(logSuc))
-	}()
+	//go func() {
+	//	logSuc, _ := json.Marshal(resp)
+	//	logc.Info(ctx, "ApiResponse:", string(logSuc))
+	//}()
 
 	httpx.WriteJsonCtx(ctx, w, http.StatusOK, language.SwitchLanguage(resp, headInfo.GetContentLanguage(ctx)))
 }
